@@ -3,10 +3,10 @@ import { STATUS } from "../Types/STATUS";
 
 export default class Table {
 
-    private data:Array<Cell> = [];
+    private head:Cell | null;
  
-    constructor(table:Array<Cell>) {
-         this.data = table;
+    constructor(head:Cell | null) {
+         this.head = head;
     }
  
  
@@ -20,14 +20,15 @@ export default class Table {
 
 
 
-        const tableLimit = 4;
+        const tableLimit = this.countData(this.head);
         const tableEle = document.createElement("table");
-        
+        let curr:Cell | null = this.head;
         for(let i=0; i<tableLimit; i++) {
             const tr = document.createElement("tr");
             for(let j = 0; j<tableLimit; j++) {
                 const td = document.createElement("td");
-                td.innerText = this.data[i].data.toString();
+                td.innerText = <string> curr?.data.toString();
+                curr = <NonNullable<Cell>> curr?.next;
                 tr.appendChild(td);
             }
 
@@ -35,5 +36,19 @@ export default class Table {
         };
         parentElement.appendChild(tableEle);
     }
+
+
+    
+    private countData(head:Cell | null) {
+        let counter = 0;
+        let curr:Cell | null = head;
+        console.log(curr)
+        while(curr != null) {
+            counter++;
+            curr = curr.next;
+        }
+        return counter;
+    }
+
  
  }
