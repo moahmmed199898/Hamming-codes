@@ -1,34 +1,54 @@
 import Table from "./Components/Table";
+import HammingCodes from "./Services/HammingCodes";
 import { Binary } from "./Types/Binary";
 import Cell from "./Types/Cell";
 
-const table = new Table(makeDummyData());
+let table = new Table(makeDummyData());
 const ele:HTMLElement = <HTMLElement> document.getElementById("app");
 table.render(ele);
-console.log("hello")
+const hammingCodes = new HammingCodes(makeDummyData());
+hammingCodes.checkData();
+
+table = new Table(hammingCodes.getData());
+table.render(ele);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 function makeDummyData() {
     let table:Binary[][] = <Binary[][]> <unknown>[
-        [0, 0, 0, 1],
-        [1, 0, 1, 0],
-        [1, 0, 1, 0],
-        [1, 0, 0, 1]
+        [1, 1, 0, 0],
+        [0, 1, 0, 0],
+        [1, 1, 0, 1],
+        [1, 0, 1, 1]
     ]
 
-    let tableWCells = Array<Array<Cell>>();
-    for(let i = 0; i<table.length; i++) {
-        let cells = Array<Cell>();
-        for(let j = 0; j<table[i].length; j++) {
-            let cell = new Cell(table[i][j], "#ffffff")
-            cells.push(cell)
+    let cells:Array<Cell> = new Array<Cell>();
 
+    for(let i = 0; i<table.length; i++) {
+        for(let j = 0; j<table.length; j++) {
+            let cell = new Cell(table[i][j], i,j);
+            cells.push(cell);
         }
-        tableWCells.push(cells);
     }
 
-    return tableWCells;
+    console.log(cells);
+    return cells;
     
 }

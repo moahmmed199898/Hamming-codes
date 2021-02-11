@@ -1,15 +1,12 @@
 import Cell from "../Types/Cell";
+import { STATUS } from "../Types/STATUS";
 
 export default class Table {
 
     private data:Array<Cell> = [];
  
-    constructor(table:Array<Array<Cell>>) {
-         for(let i = 0; i<table.length; i++) {
-            for(let j = 0; j<table[i].length; j++) {
-                this.data.push(table[i][j]);
-            }
-         }
+    constructor(table:Array<Cell>) {
+         this.data = table;
     }
  
  
@@ -18,14 +15,19 @@ export default class Table {
      
      */
     public render(parentElement:HTMLElement) {
-        const tableLimit = Math.sqrt(this.data.length);
+        //clear the parent element 
+        parentElement.innerHTML = "";
+
+
+
+        const tableLimit = 4;
         const tableEle = document.createElement("table");
-        for(let i=0; i<this.data.length; i = i+tableLimit) {
+        
+        for(let i=0; i<tableLimit; i++) {
             const tr = document.createElement("tr");
             for(let j = 0; j<tableLimit; j++) {
                 const td = document.createElement("td");
-                td.innerText = this.data[i+j].data.toString();
-                td.style.background = this.data[i+j].color;
+                td.innerText = this.data[i].data.toString();
                 tr.appendChild(td);
             }
 
