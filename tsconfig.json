@@ -11,7 +11,7 @@
         "target": "es5",
         "allowJs": true,
         "downlevelIteration": true,
-        "strictNullCheck": false
+        "strictNullChecks": false
         
     },
     "include": [

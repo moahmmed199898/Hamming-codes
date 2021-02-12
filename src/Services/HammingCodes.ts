@@ -58,11 +58,18 @@ export default class HammingCodes {
      * Check1 checks if the odd colums are even or odd ( expected to be even)
      */
     public check1() {
-        let curr: Cell | null = this.head;
-        while(curr != null) {
-            curr.status = STATUS.Fail;
-            curr = curr.next;
+        const {cells, others} = this.data.firstTestColumns;
+        let countOfOnes = 0;
+        for(let cell of cells) countOfOnes++;
+        if(countOfOnes%2 == 0) {
+            for(let cell of cells) cell.status = STATUS.Pass;
+        } else {
+            for(let cell of cells) cell.status = STATUS.Fail;
         }
+
+        
+
+
     }
 
 
@@ -105,15 +112,16 @@ export default class HammingCodes {
 
     }
 
-    private countData(head:Cell| null) {
+    private countData(head:Cell) {
         let counter = 0;
-        let curr:Cell | null = head;
+        let curr:Cell = head;
         while(curr != null) {
             counter++;
             curr = curr.next;
         }
         return counter;
     }
+
 
 
 

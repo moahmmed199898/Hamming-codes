@@ -3,14 +3,13 @@ import HammingCodes from "./Services/HammingCodes";
 import { Binary } from "./Types/Binary";
 import Cell from "./Types/Cell";
 
-let table = new Table(makeDummyData());
+// let table = new Table(makeDummyData());
 const ele:HTMLElement = <HTMLElement> document.getElementById("app");
-table.render(ele);
-// const hammingCodes = new HammingCodes(makeDummyData());
-// hammingCodes.checkData();
-
-// table = new Table(hammingCodes.getData());
 // table.render(ele);
+const hammingCodes = new HammingCodes(makeDummyData());
+hammingCodes.checkData();
+const table = new Table(hammingCodes.getData());
+table.render(ele);
 
 
 
@@ -39,17 +38,33 @@ function makeDummyData() {
         [1, 0, 1, 1]
     ]
 
-    let curr:Cell | null= null;
-    for(let i = 0; i<table.length; i++) {
-        for(let j = 0; j<table.length; j++) {
-            let cell = new Cell(table[i][j], i,j);
-            if(curr == null) curr = cell;
-            else curr.next = cell;
+    // table[rowCount][columnCount]
+    let head:Cell = new Cell(0,0,0);
+    let curr:Cell = head;
+    let rowCount = 0;
+    let columnCount = 0;
+
+    for(let row of table) {
+        for(let cell of row) {
+            curr.next = new Cell(cell, columnCount, rowCount);
             curr = curr.next;
-            console.log(curr == null)
+            columnCount++;
         }
+        columnCount = 0;
+        rowCount++;
     }
 
-    return curr;
+    head = head.next;
+    return head;
     
+}
+
+
+
+function readAll(head:Cell) {
+    let curr = head;
+    while(curr != null) {
+        console.log(curr.x + " | " + curr.y);
+        curr = curr.next;
+    }
 }

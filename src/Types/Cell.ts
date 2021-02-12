@@ -7,6 +7,7 @@ export default class Cell{
     public x:number;
     public y:number;
     public next:Cell | null;
+    
     constructor(data:Binary, x:number, y:number) {
         this.data = data;
         this.status = STATUS.Neutral;
