@@ -32,10 +32,10 @@ table.render(ele);
 
 function makeDummyData() {
     let table:Binary[][] = <Binary[][]> <unknown>[
-        [1, 1, 0, 0],
+        [1, 0, 0, 0],
         [0, 1, 0, 0],
         [1, 1, 0, 1],
-        [1, 0, 1, 1]
+        [1, 0, 1, 0]
     ]
 
     // table[rowCount][columnCount]

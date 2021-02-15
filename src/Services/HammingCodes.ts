@@ -40,10 +40,15 @@ export default class HammingCodes {
 
 
     public checkData() {
-        this.check1();
-        this.check2();
-        this.check3();
-        this.check4();
+        let check1 = this.check1();
+        let check2 =this.check2();
+        let check3 = this.check3();
+        let check4 =this.check4();
+
+        // if(check1 && check2 && check3 && check4) {
+        //     this.parityBitCheck();
+        // }
+
 
     }
 
@@ -58,32 +63,50 @@ export default class HammingCodes {
      * Check1 checks if the odd colums are even or odd ( expected to be even)
      */
     public check1() {
-        const {cells, others} = this.data.firstTestColumns;
-        let countOfOnes = 0;
-        for(let cell of cells) countOfOnes++;
-        if(countOfOnes%2 == 0) {
-            for(let cell of cells) cell.status = STATUS.Pass;
-        } else {
-            for(let cell of cells) cell.status = STATUS.Fail;
-        }
-
-        
-
-
+        return this.test(this.data.firstTestColumns);
     }
 
 
     public check2() {
-
-
+        return this.test(this.data.secondTestColumns);
     }
 
 
     public check3() {
-
+        return this.test(this.data.thirdTestRows);
     }
 
     public check4() {
+        return this.test(this.data.forthTestRows);
+    }
+
+
+    public parityBitCheck() {
+        let lastCell = this.getLastItem();
+        if(lastCell.data == 0) {
+            lastCell.status = STATUS.Pass;
+        } else {
+            lastCell.status = STATUS.Fail;
+        }
+
+    }
+
+
+    private test (array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
+        const {cells, others} = array;
+        let countOfOnes = 0;
+        for(let cell of cells){
+            if(cell.data == 1) countOfOnes++;
+        }
+        console.log(countOfOnes)
+        if(countOfOnes%2 == 0) {
+            for(let cell of cells) cell.status = STATUS.Pass;
+            return true;
+        } else {
+            for(let cell of cells) cell.status = STATUS.Fail;
+            return false;
+        }
+
     }
 
 
@@ -98,13 +121,13 @@ export default class HammingCodes {
             if(curr.x % 2 == 0) this.data.firstTestColumns.cells.push(curr)
             else this.data.firstTestColumns.others.push(curr);
 
-            if(curr.x >= tableLimit/2) this.data.secondTestColumns.cells.push(curr)
+            if(curr.x < tableLimit/2) this.data.secondTestColumns.cells.push(curr)
             else this.data.secondTestColumns.others.push(curr);
 
             if(curr.y % 2 == 0) this.data.thirdTestRows.cells.push(curr)
             else this.data.thirdTestRows.others.push(curr);
 
-            if(curr.y >= tableLimit/2) this.data.forthTestRows.cells.push(curr)
+            if(curr.y < tableLimit/2) this.data.forthTestRows.cells.push(curr)
             else this.data.forthTestRows.others.push(curr);
 
             curr = curr.next;
@@ -120,6 +143,15 @@ export default class HammingCodes {
             curr = curr.next;
         }
         return counter;
+    }
+
+
+    private getLastItem():Cell {
+        let curr = this.head;
+        while(curr.next != null) {
+            curr = curr.next;
+        }
+        return curr;
     }
 
 
