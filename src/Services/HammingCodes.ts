@@ -1,4 +1,3 @@
-import { Binary } from "../Types/Binary";
 import Cell from "../Types/Cell";
 import { STATUS } from "../Types/STATUS";
 
@@ -6,8 +5,8 @@ import { STATUS } from "../Types/STATUS";
 
 export default class HammingCodes {
 
-    private dataSize = 0;
     private head:Cell | null;
+    private errorFound = false;
 
     private data = {
         firstTestColumns: {
@@ -40,16 +39,11 @@ export default class HammingCodes {
 
 
     public checkData() {
-        let check1 = this.check1();
-        let check2 =this.check2();
-        let check3 = this.check3();
-        let check4 =this.check4();
-
-        // if(check1 && check2 && check3 && check4) {
-        //     this.parityBitCheck();
-        // }
-
-
+        this.check1()
+        this.check2()
+        this.check3()
+        this.check4()
+        this.twoErrorCheck()
     }
 
     public getData() {
@@ -81,12 +75,16 @@ export default class HammingCodes {
     }
 
 
-    public parityBitCheck() {
-        let lastCell = this.getLastItem();
-        if(lastCell.data == 0) {
-            lastCell.status = STATUS.Pass;
-        } else {
-            lastCell.status = STATUS.Fail;
+    public twoErrorCheck() {
+        let countOfOnes = this.countTheOnesInNode(this.head);
+        if(this.errorFound && countOfOnes%2 == 0) {
+            let curr = this.head;
+            while(curr!= null) {
+                curr.setStatus(STATUS.MultipleErrors);
+                curr = curr.next;
+            }
+        } else if(!this.errorFound && countOfOnes%2 == 0) {
+            this.head.setStatus(STATUS.Pass)
         }
 
     }
@@ -94,16 +92,27 @@ export default class HammingCodes {
 
     private test (array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
         const {cells, others} = array;
-        let countOfOnes = 0;
-        for(let cell of cells){
-            if(cell.data == 1) countOfOnes++;
-        }
-        console.log(countOfOnes)
+        let countOfOnes:number = this.countTheOnes(cells);
+
+        // if the count is even 
         if(countOfOnes%2 == 0) {
-            for(let cell of cells) cell.status = STATUS.Pass;
+            for(let cell of cells) cell.setStatus(STATUS.Pass);
             return true;
+
         } else {
-            for(let cell of cells) cell.status = STATUS.Fail;
+            //if not 
+            for(let cell of cells) 
+            {
+                if(cell.getStatus() != STATUS.Pass) {
+                    cell.setStatus(STATUS.Fail);
+                }
+            }
+
+            //passing the others 
+            for(let cell of others) {
+                cell.setStatus(STATUS.Pass);
+            }
+            this.errorFound = true;
             return false;
         }
 
@@ -111,55 +120,47 @@ export default class HammingCodes {
 
 
     public prepRows() {
+        let curr:Cell = this.head;
+        while(curr!= null ) {
+            let index = curr.getIndex();
 
-        
-        this.dataSize = this.countData(this.head);
-        let tableLimit = Math.floor(Math.sqrt(this.dataSize));
-        let curr:Cell | null = this.head;
-        while(curr != null) {
-            //first test 
-            if(curr.x % 2 == 0) this.data.firstTestColumns.cells.push(curr)
+            //first check data
+            if(index[index.length-1] == 1) this.data.firstTestColumns.cells.push(curr)
             else this.data.firstTestColumns.others.push(curr);
 
-            if(curr.x < tableLimit/2) this.data.secondTestColumns.cells.push(curr)
+            if(index[index.length-2] == 1) this.data.secondTestColumns.cells.push(curr);
             else this.data.secondTestColumns.others.push(curr);
 
-            if(curr.y % 2 == 0) this.data.thirdTestRows.cells.push(curr)
+            if(index[index.length-3] == 1) this.data.thirdTestRows.cells.push(curr);
             else this.data.thirdTestRows.others.push(curr);
 
-            if(curr.y < tableLimit/2) this.data.forthTestRows.cells.push(curr)
+            if(index[index.length-4] == 1) this.data.forthTestRows.cells.push(curr);
             else this.data.forthTestRows.others.push(curr);
 
+            
             curr = curr.next;
         }
 
     }
 
-    private countData(head:Cell) {
-        let counter = 0;
-        let curr:Cell = head;
-        while(curr != null) {
-            counter++;
-            curr = curr.next;
+
+    private countTheOnes(cells:Cell[]):number {
+        let countOfOnes = 0;
+        //get the count of ones 
+        for(let cell of cells){
+            if(cell.getData() == 1) countOfOnes++;
         }
-        return counter;
+        return countOfOnes;
     }
 
-
-    private getLastItem():Cell {
+    
+    private countTheOnesInNode(head:Cell):number {
+        let countOfOnes = 0;
         let curr = this.head;
-        while(curr.next != null) {
+        while(curr != null) {
+            if(curr.getData() == 1) countOfOnes++;
             curr = curr.next;
         }
-        return curr;
-    }
-
-
-
-
-
-    private setPassFail(row:number, column:number, status:STATUS) {
-
-   
+        return countOfOnes;
     }
 }

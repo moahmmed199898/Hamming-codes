@@ -1,1 +1,3 @@
-export type Binary = 0|1;
+export type Binary = BinaryDigit[];
+
+export type BinaryDigit = 0|1;

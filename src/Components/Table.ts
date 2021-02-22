@@ -28,11 +28,13 @@ export default class Table {
             const trEle = document.createElement("tr");
             for(let column = 0; column<tableLimit; column++) {
                 const tdEle = document.createElement("td");
-                tdEle.innerText = curr.data.toString();
-                switch(curr.status) {
+                tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
+                console.log(curr.getIndex());
+                switch(curr.getStatus()) {
                     case STATUS.Fail: tdEle.style.backgroundColor = "#800000"; break;
                     case STATUS.Neutral: tdEle.style.backgroundColor = "#FFFFFF"; break;
                     case STATUS.Pass: tdEle.style.backgroundColor = "#008000"; break;
+                    case STATUS.MultipleErrors: tdEle.style.backgroundColor = "#F08144"; break;
                 }
 
 
