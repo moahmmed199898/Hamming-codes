@@ -19,8 +19,7 @@ export default class Table {
         parentElement.innerHTML = "";
 
 
-
-        const tableLimit = Math.sqrt(this.countData(this.head));
+        const tableLimit = Math.ceil(Math.sqrt(this.countData(this.head)));
         const tableEle = document.createElement("table");
         let curr:Cell = this.head;
 
@@ -28,18 +27,19 @@ export default class Table {
             const trEle = document.createElement("tr");
             for(let column = 0; column<tableLimit; column++) {
                 const tdEle = document.createElement("td");
-                tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
-                console.log(curr.getIndex());
-                switch(curr.getStatus()) {
-                    case STATUS.Fail: tdEle.style.backgroundColor = "#800000"; break;
-                    case STATUS.Neutral: tdEle.style.backgroundColor = "#FFFFFF"; break;
-                    case STATUS.Pass: tdEle.style.backgroundColor = "#008000"; break;
-                    case STATUS.MultipleErrors: tdEle.style.backgroundColor = "#F08144"; break;
+                if(curr == null) {
+                    tdEle.innerText = "0";
+                    tdEle.style.backgroundColor = "#808080";
                 }
+                else{
+                    tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
+                    tdEle.style.backgroundColor = this.getBackgroundColor(curr.getStatus());
+                    curr = curr.next;
+                } 
 
 
                 trEle.appendChild(tdEle);
-                curr = curr.next;
+
             }
             tableEle.appendChild(trEle);
         }
@@ -49,6 +49,17 @@ export default class Table {
 
 
     
+    private getBackgroundColor(status:STATUS):string {
+        switch(status) {
+            case STATUS.Fail: return "#800000";
+            case STATUS.Neutral: return "#FFFFFF";
+            case STATUS.Pass: return "#008000"; 
+            case STATUS.MultipleErrors: return "#F08144";
+            case STATUS.ParityBit: return "#add8e6";
+        }
+    }
+
+
     private countData(head:Cell | null) {
         let counter = 0;
         let curr:Cell | null = head;

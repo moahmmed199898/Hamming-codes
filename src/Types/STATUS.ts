@@ -3,6 +3,7 @@ export enum STATUS {
     Fail,
     Neutral,
     MultipleErrors,
+    ParityBit,
 
 
 }

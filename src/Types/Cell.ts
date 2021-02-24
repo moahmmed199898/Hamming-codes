@@ -5,15 +5,15 @@ export default class Cell{
     private data:BinaryDigit    
     private status:STATUS
     private index: Binary;
-    public next:Cell | null;
+    public next:Cell;
     
-    private static maxLength = 0;
+    private static maxLength = 8;
 
-    constructor(data:BinaryDigit, index:number) {
+    constructor(data:BinaryDigit, index?:number) {
         this.data = data;
         this.status = STATUS.Neutral;
         this.next = null;
-        this.setIndex(index);
+        this.setIndex(index || 0);
     }
 
 
@@ -26,7 +26,6 @@ export default class Cell{
         let i =0;
         for(; i<Cell.maxLength - this.index.length; i++) results[i] = 0;
         for(let j = 0; i<Cell.maxLength; i++) {
-            console.log(Cell.maxLength - this.index.length - i)
             results[i] = this.index[j];
             j++
         }
@@ -34,7 +33,6 @@ export default class Cell{
     }
     public setIndex(index:number){
         this.index = index.toString(2).split("").map(num=>parseInt(num) as BinaryDigit);   
-        Cell.maxLength = this.index.length;
     }
 
 

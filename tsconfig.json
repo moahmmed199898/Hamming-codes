@@ -11,9 +11,7 @@
         "target": "es5",
         "allowJs": true,
         "downlevelIteration": true,
-        "strictNullChecks": false,
-        "unified-signatures": false
-
+        "strictNullChecks": false
         
     },
     "include": [
