@@ -43,7 +43,7 @@ export default class HammingCodesReceiver {
         this.check2()
         this.check3()
         this.check4()
-        this.twoErrorCheck()
+        // this.twoErrorCheck()
     }
 
     public getData() {

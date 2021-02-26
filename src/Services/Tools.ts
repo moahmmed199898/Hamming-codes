@@ -7,14 +7,14 @@ export function countData(head:Cell) {
         counter++;
         curr = curr.next;
     }
-    return counter;
+    console.log(counter)
 }
 
 
 export function logData(head:Cell) {
     let curr:Cell = head;
     while(curr != null) {
-        console.log(curr.getIndex())
+        console.log(curr.getData())
         curr = curr.next;
     }
 }

@@ -11,9 +11,9 @@ const ele:HTMLElement = <HTMLElement> document.getElementById("app");
 
 const hammingCodes = new HammingCodesSender("H");
 let data = hammingCodes.getCells().getHead();
-// const hammingCodesReciver = new HammingCodesReceiver(data);
-// hammingCodesReciver.checkData();
-// data = hammingCodesReciver.getData();
+const hammingCodesReciver = new HammingCodesReceiver(data);
+hammingCodesReciver.checkData();
+data = hammingCodesReciver.getData();
 
 const table = new Table(data);
 table.render(ele);

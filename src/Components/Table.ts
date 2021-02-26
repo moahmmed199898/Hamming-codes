@@ -51,6 +51,7 @@ export default class Table {
     
     private getBackgroundColor(status:STATUS):string {
         switch(status) {
+            case STATUS.Test: return "#000000"
             case STATUS.Fail: return "#800000";
             case STATUS.Neutral: return "#FFFFFF";
             case STATUS.Pass: return "#008000"; 

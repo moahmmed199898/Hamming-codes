@@ -29,8 +29,8 @@ export default class CellManager {
         if(index === 0) return this.addToTheBeginning(cell);
         if(index >= this.size) return this.addToTheEnd(cell);
 
-        let before = this.getCell(index -2);
-        let after = this.getCell(index-1);
+        let before = this.getCell(index -1);
+        let after = this.getCell(index);
 
         cell.next = after;
         before.next = cell;
