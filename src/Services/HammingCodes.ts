@@ -1,166 +1,64 @@
+import { BinaryDigit } from "../Types/Binary";
 import Cell from "../Types/Cell";
-import { STATUS } from "../Types/STATUS";
-
-
+import CellManager from "../Types/CellManager";
 
 export default class HammingCodes {
+    cellManager:CellManager;
 
-    private head:Cell | null;
-    private errorFound = false;
-
-    private data = {
-        firstTestColumns: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        }, 
-        secondTestColumns: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        },
-        thirdTestRows: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        },
-
-        forthTestRows: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        }
-
-
-    }
-
-    
-
-    constructor(head:Cell | null) {
-        this.head = head;
-        this.prepRows();
-    }
-
-
-    public checkData() {
-        this.check1()
-        this.check2()
-        this.check3()
-        this.check4()
-        this.twoErrorCheck()
-    }
-
-    public getData() {
-        return this.head;
-     
-    }
-
-
-
-    /**
-     * Check1 checks if the odd colums are even or odd ( expected to be even)
-     */
-    public check1() {
-        return this.test(this.data.firstTestColumns);
-    }
-
-
-    public check2() {
-        return this.test(this.data.secondTestColumns);
-    }
-
-
-    public check3() {
-        return this.test(this.data.thirdTestRows);
-    }
-
-    public check4() {
-        return this.test(this.data.forthTestRows);
-    }
-
-
-    public twoErrorCheck() {
-        let countOfOnes = this.countTheOnesInNode(this.head);
-        if(this.errorFound && countOfOnes%2 == 0) {
-            let curr = this.head;
-            while(curr!= null) {
-                curr.setStatus(STATUS.MultipleErrors);
-                curr = curr.next;
+    getParityBits():Cell[] {
+        let curr = this.cellManager.getHead();
+        let parityBits:Cell[] = [];
+        while(curr != null) {
+            let indexes = curr.getIndex();
+            let highBitsCount = 0;
+            for(let index of indexes) {
+                if(highBitsCount>1) break;
+                if(index == 1) highBitsCount++;
             }
-        } else if(!this.errorFound && countOfOnes%2 == 0) {
-            this.head.setStatus(STATUS.Pass)
+            if(highBitsCount == 1) parityBits.push(curr);
+            curr = curr.next;
         }
 
+        return parityBits;
     }
 
+    findCountsOfOnes() {
+        // considering the indexes are 8 in length we can loop though them and count how many ones per index ie 
+        //0,0,0,0,0,0,1,0
+        //0,0,0,0,0,1,1,0
+        //this will result in 2 in the 2nd index and 1 in the first index
+        let counters:{[key:number]:number} = {}
+        let curr:Cell = this.cellManager.getHead();
+        let numberIndex =0;
 
-    private test (array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
-        const {cells, others} = array;
-        let countOfOnes:number = this.countTheOnes(cells);
-
-        // if the count is even 
-        if(countOfOnes%2 == 0) {
-            for(let cell of cells) cell.setStatus(STATUS.Pass);
-            return true;
-
-        } else {
-            //if not 
-            for(let cell of cells) 
-            {
-                if(cell.getStatus() != STATUS.Pass) {
-                    cell.setStatus(STATUS.Fail);
+        while(curr != null ){
+            let index = curr.getIndex();
+            let data = curr.getData();
+            for(let i = 0; i<index.length; i++){
+                if(index[i] == 1 && data == 1) {
+                    if(counters[i] == null) counters[i] = 1;
+                    else counters[i]++;
                 }
             }
 
-            //passing the others 
-            for(let cell of others) {
-                cell.setStatus(STATUS.Pass);
-            }
-            this.errorFound = true;
-            return false;
+            curr = curr.next;
         }
-
+        return counters;
     }
 
-
-    public prepRows() {
-        let curr:Cell = this.head;
-        while(curr!= null ) {
-            let index = curr.getIndex();
-
-            //first check data
-            if(index[index.length-1] == 1) this.data.firstTestColumns.cells.push(curr)
-            else this.data.firstTestColumns.others.push(curr);
-
-            if(index[index.length-2] == 1) this.data.secondTestColumns.cells.push(curr);
-            else this.data.secondTestColumns.others.push(curr);
-
-            if(index[index.length-3] == 1) this.data.thirdTestRows.cells.push(curr);
-            else this.data.thirdTestRows.others.push(curr);
-
-            if(index[index.length-4] == 1) this.data.forthTestRows.cells.push(curr);
-            else this.data.forthTestRows.others.push(curr);
-
-            
+        
+    convertStringBinaryDigitsToCells(data:string[]):Cell {
+        let firstDigit:BinaryDigit = Number.parseInt(data[0]) as BinaryDigit;
+        let start = new Cell(firstDigit,0);
+        let curr = start;
+        for(let i = 1; i<data.length;i++) {
+            let digit = Number.parseInt(data[i]) as BinaryDigit;
+            curr.next = new Cell(digit,i);
             curr = curr.next;
         }
 
+        return start;
     }
 
 
-    private countTheOnes(cells:Cell[]):number {
-        let countOfOnes = 0;
-        //get the count of ones 
-        for(let cell of cells){
-            if(cell.getData() == 1) countOfOnes++;
-        }
-        return countOfOnes;
-    }
-
-    
-    private countTheOnesInNode(head:Cell):number {
-        let countOfOnes = 0;
-        let curr = this.head;
-        while(curr != null) {
-            if(curr.getData() == 1) countOfOnes++;
-            curr = curr.next;
-        }
-        return countOfOnes;
-    }
 }

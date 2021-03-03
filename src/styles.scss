@@ -1,0 +1,198 @@
+
+$headerColor: #3EB2E6;
+$white: #ffffff;
+$gray: #d1d1d1;
+
+
+$pass: #008000;
+$fail: #800000;
+$Neutral: $white;
+$MultipleErrors: #F08144;
+$ParityBit: #add8e6;
+$NA: rgb(128, 128, 128);
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+
+
+.app {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  
+  grid-template-areas: 
+  "header header header"
+  "options options options"
+  "tables tables tables"
+  ;
+}
+
+
+#header{
+  grid-area: header;
+  background-color: $headerColor;
+  height: 10vh;
+  display: flex;
+  padding: 20px;
+
+  #wordSender, #wordReciver {
+    flex: 2;
+    height: 80%;
+  }
+
+  input, input:disabled {
+    background-color: $white;
+    height: 100%;
+    border-radius: 20px;
+    border-style: none;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+    font-size: 35px;
+  }
+
+  
+
+  #headerArrow{
+    color: $white;
+    flex: 1;
+    font-size: 4em;
+    text-align: center;
+  }
+
+  
+  
+
+}
+
+#options{
+  grid-area: options;
+  background-color: #37A5D6;
+  color: #ffffff;
+  font-weight: bold;
+  display: grid;
+  grid-template-areas: "sender common reciver";
+  transition: all 0.5s;
+  span{
+    display: block;
+    margin: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+      
+  .active{
+    color: $white;
+  }
+
+  .disabled{
+    color: $gray;
+  }
+
+  .senderOptions {
+    grid-area: sender;
+  }
+
+  .commonOptions{
+    grid-area: common;
+  }
+
+  .reciverOptions{
+    grid-area: reciver;
+  }
+
+
+  
+}
+
+#tables {
+  grid-area: tables;
+  display: grid;
+  grid-template-areas: "sender info reciver";
+  color: $white;
+  font-weight: bold;
+
+  .Pass {background-color: $pass;}
+  .Fail{background-color: $fail;}
+  .Neutral{background-color: $Neutral;}
+  .MultipleErrors{background-color: $MultipleErrors;}
+  .ParityBit{background-color: $ParityBit;}
+
+  #sender{
+    grid-area: sender;
+    color: black;
+  }
+
+  #info {
+    grid-area: info;
+    color: black;
+    padding: 20px;
+    ul{
+      padding-left: 10px;
+      list-style: none;
+      li{
+        padding-bottom: 10px;
+      }
+      li::before {
+        content: "";
+        height: 15px;
+        width: 15px;
+        margin-left: 20px;
+        position: absolute;
+        border-radius: 50%;
+        margin-left: -20px;
+        border: 1px black solid;
+      }
+
+      #Pass::before {
+        background-color: $pass;
+      }
+
+      #Fail::before {
+        background-color: $fail;
+      }
+
+      #ParityBit::before {
+        background-color: $ParityBit;
+      }
+
+      #Neutral::before {
+        background-color: $Neutral;
+      }
+
+      #MultipleErrors::before {
+        background-color: $MultipleErrors;
+      }
+
+      #NA::before {
+        background-color: $NA;
+      }
+
+      
+
+
+    }
+  }
+
+  #reciver {
+    grid-area: reciver;
+  }
+
+  table {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    text-align: center;
+    overflow: hidden;
+    td{
+      border: 2px black solid;
+    }
+  }
+
+}

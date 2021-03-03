@@ -4,7 +4,5 @@ export enum STATUS {
     Neutral,
     MultipleErrors,
     ParityBit,
-    Test,
-
 
 }

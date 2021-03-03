@@ -1,12 +1,13 @@
 import Cell from "../Types/Cell";
+import CellManager from "../Types/CellManager";
 import { STATUS } from "../Types/STATUS";
 
 export default class Table {
 
     private head:Cell;
  
-    constructor(head:Cell) {
-         this.head = head;
+    constructor(cellManager:CellManager) {
+         this.head = cellManager.getHead();
     }
  
  
@@ -32,8 +33,10 @@ export default class Table {
                     tdEle.style.backgroundColor = "#808080";
                 }
                 else{
-                    tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
-                    tdEle.style.backgroundColor = this.getBackgroundColor(curr.getStatus());
+                    // tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
+                    tdEle.innerText = curr.getData().toString();
+                    // tdEle.style.backgroundColor = this.getBackgroundColor(curr.getStatus());
+                    tdEle.classList.add(this.getStyleClass(curr.getStatus()))
                     curr = curr.next;
                 } 
 
@@ -49,14 +52,13 @@ export default class Table {
 
 
     
-    private getBackgroundColor(status:STATUS):string {
+    private getStyleClass(status:STATUS):string {
         switch(status) {
-            case STATUS.Test: return "#000000"
-            case STATUS.Fail: return "#800000";
-            case STATUS.Neutral: return "#FFFFFF";
-            case STATUS.Pass: return "#008000"; 
-            case STATUS.MultipleErrors: return "#F08144";
-            case STATUS.ParityBit: return "#add8e6";
+            case STATUS.Fail: return "Fail";
+            case STATUS.Neutral: return "Neutral";
+            case STATUS.Pass: return "Pass"; 
+            case STATUS.MultipleErrors: return "MultipleErrors";
+            case STATUS.ParityBit: return "ParityBit";
         }
     }
 
