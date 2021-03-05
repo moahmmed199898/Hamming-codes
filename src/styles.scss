@@ -11,12 +11,23 @@ $MultipleErrors: #F08144;
 $ParityBit: #add8e6;
 $NA: rgb(128, 128, 128);
 
+$appLayout:
+"header header header header"
+"tables tables tables options"
+"tables tables tables options"
+"tables tables tables options"
+"tables tables tables options"
+"tables tables tables options"
+"tables tables tables options"
+"tableKey tableKey stats options"
+;
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 
@@ -25,19 +36,15 @@ html, body {
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto;
+  height: 100%;
   
-  grid-template-areas: 
-  "header header header"
-  "options options options"
-  "tables tables tables"
-  ;
+  grid-template-areas:$appLayout;
 }
 
 
 #header{
   grid-area: header;
   background-color: $headerColor;
-  height: 10vh;
   display: flex;
   padding: 20px;
 
@@ -73,12 +80,15 @@ html, body {
 
 #options{
   grid-area: options;
-  background-color: #37A5D6;
-  color: #ffffff;
+  background-color: darken( $headerColor, 10% );
+  color: $white;
   font-weight: bold;
   display: grid;
-  grid-template-areas: "sender common reciver";
-  transition: all 0.5s;
+  grid-template-areas: 
+    "sender"
+    "common"
+    "reciver"
+  ;
   span{
     display: block;
     margin: 20px;
@@ -114,7 +124,7 @@ html, body {
 #tables {
   grid-area: tables;
   display: grid;
-  grid-template-areas: "sender info reciver";
+  grid-template-areas: "sender reciver";
   color: $white;
   font-weight: bold;
 
@@ -127,57 +137,6 @@ html, body {
   #sender{
     grid-area: sender;
     color: black;
-  }
-
-  #info {
-    grid-area: info;
-    color: black;
-    padding: 20px;
-    ul{
-      padding-left: 10px;
-      list-style: none;
-      li{
-        padding-bottom: 10px;
-      }
-      li::before {
-        content: "";
-        height: 15px;
-        width: 15px;
-        margin-left: 20px;
-        position: absolute;
-        border-radius: 50%;
-        margin-left: -20px;
-        border: 1px black solid;
-      }
-
-      #Pass::before {
-        background-color: $pass;
-      }
-
-      #Fail::before {
-        background-color: $fail;
-      }
-
-      #ParityBit::before {
-        background-color: $ParityBit;
-      }
-
-      #Neutral::before {
-        background-color: $Neutral;
-      }
-
-      #MultipleErrors::before {
-        background-color: $MultipleErrors;
-      }
-
-      #NA::before {
-        background-color: $NA;
-      }
-
-      
-
-
-    }
   }
 
   #reciver {
@@ -195,4 +154,73 @@ html, body {
     }
   }
 
+}
+
+
+#tableKey {
+  grid-area: tableKey;
+  color: black;
+  padding: 20px;
+  // margin-left: 30%;
+  // transform: translate(-20%,0);
+  font-weight: bold;
+  font-size: 20px;
+  ul{
+    list-style: none;
+
+    li{
+      padding-left: 50px;
+      display: inline;
+    }
+    
+
+    li::before {
+      content: "";
+      height: 30px;
+      width: 30px;
+      position: absolute;
+      border-radius: 50%;
+      margin-left: -40px;
+      margin-top: -3px;
+      border: 1px  darken( $headerColor, 10% ) solid;
+    }
+
+    #Pass::before {
+      background-color: $pass;
+    }
+
+    #Fail::before {
+      background-color: $fail;
+    }
+
+    #ParityBit::before {
+      background-color: $ParityBit;
+    }
+
+    #Neutral::before {
+      background-color: $Neutral;
+    }
+
+    #MultipleErrors::before {
+      background-color: $MultipleErrors;
+    }
+
+    #NA::before {
+      background-color: $NA;
+    }
+
+    
+
+
+  }
+}
+
+#stats{
+  grid-area: stats;
+  ul{
+    list-style: none;
+    font-size: 25px;
+    padding-top: 10px;
+    font-weight: bold;
+  }
 }

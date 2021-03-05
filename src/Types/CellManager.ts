@@ -1,4 +1,5 @@
 import { logData } from "../Services/Tools";
+import { BinaryDigit } from "./Binary";
 import Cell from "./Cell";
 import { STATUS } from "./STATUS";
 
@@ -98,5 +99,38 @@ export default class CellManager {
         }
         return counter;
     }
+
+
+    public setData(text:string) {
+        let binaryData = this.getBinaryData(text);
+        let cells = this.convertStringBinaryDigitsToCells(binaryData);
+        this.head = cells;
+    }
+
+    private getBinaryData(data: string) {
+        let binaryData:string[] = data.split("").map(val=>val.charCodeAt(0).toString(2));
+        for(let i = 0; i<binaryData.length; i++) {
+            let data = binaryData[i].split("");
+            while(data.length < 8) data.unshift("0");
+            binaryData[i] = data.join("");
+        }
+        binaryData = binaryData.join("").split("");
+        return binaryData;
+        
+    }
+
+    private convertStringBinaryDigitsToCells(data:string[]):Cell {
+        let firstDigit:BinaryDigit = Number.parseInt(data[0]) as BinaryDigit;
+        let start = new Cell(firstDigit,0);
+        let curr = start;
+        for(let i = 1; i<data.length;i++) {
+            let digit = Number.parseInt(data[i]) as BinaryDigit;
+            curr.next = new Cell(digit,i);
+            curr = curr.next;
+        }
+
+        return start;
+    }
+
 
 }

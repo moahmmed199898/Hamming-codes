@@ -1,9 +1,7 @@
-import { Binary, BinaryDigit } from "../Types/Binary";
 import Cell from "../Types/Cell";
 import CellManager from "../Types/CellManager";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
-import { countData, logData } from "./Tools";
 
 export default class HammingCodesSender extends HammingCodes {
 
@@ -12,19 +10,21 @@ export default class HammingCodesSender extends HammingCodes {
         let binaryData:string[] = this.getBinaryData(data);
         let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
         this.cellManager = new CellManager(cells);
-        this.addParityBits();
-        this.cellManager.reIndexCells();
+        // this.addParityBits();
+        // this.cellManager.reIndexCells();
         
     }
 
+    public setCells(cells:CellManager) {
+        this.cellManager = cells;
+    }
 
 
-    private addParityBits() {
+    public addParityBits() {
         let currentIndex = 1;
         
         for(let exponent = 0; currentIndex < this.cellManager.getSize(); exponent++) {
             let cell = new Cell(0);
-            cell.setStatus(STATUS.ParityBit)
             this.cellManager.addCellByIndex(cell, currentIndex-1);
             currentIndex = Math.pow(2,exponent);
         }
@@ -32,8 +32,23 @@ export default class HammingCodesSender extends HammingCodes {
 
         this.cellManager.reIndexCells();
         this.setParityBits();
-
         
+    }
+
+    public setParityBitStatus() {
+        let parrityBits = this.getParityBits();
+        for(let parrityBit of parrityBits) {
+            parrityBit.setStatus(STATUS.ParityBit);
+        }
+    }
+
+    public removeParityBitStatus() {
+        let parrityBits = this.getParityBits();
+        for(let parrityBit of parrityBits) {
+            if(parrityBit.getStatus() == STATUS.ParityBit){
+                parrityBit.setStatus(STATUS.Neutral);
+            }
+        }
     }
 
     private setParityBits() {
@@ -48,6 +63,7 @@ export default class HammingCodesSender extends HammingCodes {
 
             
     }
+
 
     public getCells():CellManager {
         return this.cellManager;
@@ -77,5 +93,7 @@ export default class HammingCodesSender extends HammingCodes {
             this.cellManager.getHead().setData(1)
         }
     }
+
+    
 
 }
