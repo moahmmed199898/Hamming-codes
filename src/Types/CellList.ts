@@ -3,7 +3,7 @@ import { BinaryDigit } from "./Binary";
 import Cell from "./Cell";
 import { STATUS } from "./STATUS";
 
-export default class CellManager {
+export default class CellList {
     private head:Cell;
     private size:number;
     public constructor(cells?:Cell) {

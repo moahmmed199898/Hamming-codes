@@ -2,7 +2,7 @@ import Table from "./Components/Table";
 import HammingCodesReceiver from "./Services/HammingCodesReceiver";
 import HammingCodesSender from "./Services/HammingCodesSender";
 import { logData } from "./Services/Tools";
-import CellManager from "./Types/CellManager";
+import CellList from "./Types/CellList";
 
 export default class ClientHandler {
     private userInput:HTMLInputElement; 
@@ -10,7 +10,7 @@ export default class ClientHandler {
     private tableEle:HTMLElement;
 
 
-    private cellManager:CellManager;
+    private CellList:CellList;
     private sender:HammingCodesSender;
     private receiver:HammingCodesReceiver;
     private table: Table;
@@ -41,10 +41,10 @@ export default class ClientHandler {
         this.output = document.getElementById("output");
         this.tableEle = document.querySelector("#tables #sender");
 
-        this.cellManager = new CellManager();
-        this.receiver = new HammingCodesReceiver(this.cellManager);
+        this.CellList = new CellList();
+        this.receiver = new HammingCodesReceiver(this.CellList);
         this.sender = new HammingCodesSender(this.userInput.value);
-        this.table = new Table(this.cellManager);
+        this.table = new Table(this.CellList);
 
     }
 
@@ -69,30 +69,30 @@ export default class ClientHandler {
 
 
     private userInputEventHandler() {
-        this.cellManager.setData(this.userInput.value)
+        this.CellList.setData(this.userInput.value)
         this.render();
     }
 
     private addParityBitHandler(event:Event) {
-        this.sender.setCells(this.cellManager)
+        this.sender.setCells(this.CellList)
 
         if(this.state.addParityBitButtonChecked) return;
 
         this.sender.addParityBits();
-        this.cellManager = this.sender.getCells();
+        this.CellList = this.sender.getCells();
         this.state.addParityBitButtonChecked = true;
         this.toggleActiveState(event.target);
         this.render();
     }
 
     private toggleParityBitHandler(event:Event) {
-        this.sender.setCells(this.cellManager)
+        this.sender.setCells(this.CellList)
 
         if(this.state.showParityBitButtonChecked) this.sender.removeParityBitStatus();
         else this.sender.setParityBitStatus();
 
         this.toggleActiveState(event.target);
-        this.cellManager = this.sender.getCells();
+        this.CellList = this.sender.getCells();
         this.render();
     }
 
@@ -100,7 +100,7 @@ export default class ClientHandler {
 
 
 
-    
+
 
     private toggleActiveState(target:EventTarget) {
         let element = <HTMLElement> target;
@@ -114,7 +114,7 @@ export default class ClientHandler {
     }
 
     private render() {
-        this.table = new Table(this.cellManager);
+        this.table = new Table(this.CellList);
         this.table.render(this.tableEle);
     }
 }

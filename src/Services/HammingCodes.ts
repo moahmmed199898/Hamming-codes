@@ -1,12 +1,12 @@
 import { BinaryDigit } from "../Types/Binary";
 import Cell from "../Types/Cell";
-import CellManager from "../Types/CellManager";
+import CellList from "../Types/CellList";
 
 export default class HammingCodes {
-    cellManager:CellManager;
+    CellList:CellList;
 
     getParityBits():Cell[] {
-        let curr = this.cellManager.getHead();
+        let curr = this.CellList.getHead();
         let parityBits:Cell[] = [];
         while(curr != null) {
             let indexes = curr.getIndex();
@@ -28,7 +28,7 @@ export default class HammingCodes {
         //0,0,0,0,0,1,1,0
         //this will result in 2 in the 2nd index and 1 in the first index
         let counters:{[key:number]:number} = {}
-        let curr:Cell = this.cellManager.getHead();
+        let curr:Cell = this.CellList.getHead();
         let numberIndex =0;
 
         while(curr != null ){

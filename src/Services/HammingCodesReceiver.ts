@@ -1,5 +1,5 @@
 import Cell from "../Types/Cell";
-import CellManager from "../Types/CellManager";
+import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
 
@@ -34,10 +34,10 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     
 
-    constructor(cellManager:CellManager) {
+    constructor(CellList:CellList) {
         super();
-        this.cellManager = cellManager;
-        this.head = cellManager.getHead();
+        this.CellList = CellList;
+        this.head = CellList.getHead();
         this.prepRows();
     }
 
@@ -51,7 +51,7 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
     public getData() {
-        return this.cellManager;
+        return this.CellList;
      
     }
 

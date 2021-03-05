@@ -1,13 +1,13 @@
 import Cell from "../Types/Cell";
-import CellManager from "../Types/CellManager";
+import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 
 export default class Table {
 
     private head:Cell;
  
-    constructor(cellManager:CellManager) {
-         this.head = cellManager.getHead();
+    constructor(CellList:CellList) {
+         this.head = CellList.getHead();
     }
  
  

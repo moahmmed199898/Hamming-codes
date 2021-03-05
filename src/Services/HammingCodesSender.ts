@@ -1,5 +1,5 @@
 import Cell from "../Types/Cell";
-import CellManager from "../Types/CellManager";
+import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
 
@@ -9,28 +9,28 @@ export default class HammingCodesSender extends HammingCodes {
         super();
         let binaryData:string[] = this.getBinaryData(data);
         let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
-        this.cellManager = new CellManager(cells);
+        this.CellList = new CellList(cells);
         // this.addParityBits();
-        // this.cellManager.reIndexCells();
+        // this.CellList.reIndexCells();
         
     }
 
-    public setCells(cells:CellManager) {
-        this.cellManager = cells;
+    public setCells(cells:CellList) {
+        this.CellList = cells;
     }
 
 
     public addParityBits() {
         let currentIndex = 1;
         
-        for(let exponent = 0; currentIndex < this.cellManager.getSize(); exponent++) {
+        for(let exponent = 0; currentIndex < this.CellList.getSize(); exponent++) {
             let cell = new Cell(0);
-            this.cellManager.addCellByIndex(cell, currentIndex-1);
+            this.CellList.addCellByIndex(cell, currentIndex-1);
             currentIndex = Math.pow(2,exponent);
         }
         
 
-        this.cellManager.reIndexCells();
+        this.CellList.reIndexCells();
         this.setParityBits();
         
     }
@@ -65,8 +65,8 @@ export default class HammingCodesSender extends HammingCodes {
     }
 
 
-    public getCells():CellManager {
-        return this.cellManager;
+    public getCells():CellList {
+        return this.CellList;
     }
 
     private getBinaryData(data: string) {
@@ -82,7 +82,7 @@ export default class HammingCodesSender extends HammingCodes {
     }
 
     private setZeroIndexParity() {
-        let curr = this.cellManager.getHead();
+        let curr = this.CellList.getHead();
         let countOfOnes = 0;
         while(curr != null) {
             if(curr.getData() == 1) countOfOnes++;
@@ -90,7 +90,7 @@ export default class HammingCodesSender extends HammingCodes {
         }
 
         if(countOfOnes % 2 != 0) {
-            this.cellManager.getHead().setData(1)
+            this.CellList.getHead().setData(1)
         }
     }
 
