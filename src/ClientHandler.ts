@@ -10,7 +10,7 @@ export default class ClientHandler {
     private tableEle:HTMLElement;
     private sizeEle:HTMLElement
 
-    private CellList:CellList;
+    private cellList:CellList;
     private sender:HammingCodesSender;
     private receiver:HammingCodesReceiver;
     private table: Table;
@@ -20,10 +20,6 @@ export default class ClientHandler {
         showParityBitButtonChecked: false,
         showIndexesInBinaryButtonChecked: false,
         showIndexesInBase10ButtonChecked: false,
-        reciverCheck1ButtonChecked: false,
-        reciverCheck2ButtonChecked: false,
-        reciverCheck3ButtonChecked: false,
-        reciverCheck4ButtonChecked: false,
         multipleErrorCheckButtonChecked: false,
 
     }
@@ -33,6 +29,7 @@ export default class ClientHandler {
         this.setupProperties();
         this.setUpEventHandlers();
         this.userInputEventHandler();
+        this.setUpReceiverChecks();
     }
     
     private setupProperties() {
@@ -41,10 +38,10 @@ export default class ClientHandler {
         this.tableEle = document.querySelector("#tables #sender");
         this.sizeEle = document.getElementById("size");
 
-        this.CellList = new CellList();
-        this.receiver = new HammingCodesReceiver(this.CellList);
+        this.cellList = new CellList();
+        this.receiver = new HammingCodesReceiver(this.cellList);
         this.sender = new HammingCodesSender(this.userInput.value);
-        this.table = new Table(this.CellList);
+        this.table = new Table(this.cellList);
 
     }
 
@@ -55,10 +52,6 @@ export default class ClientHandler {
         let showParityBitButton = document.getElementById("showParityBitButton");
         let showIndexesInBinaryButton = document.getElementById("showIndexesInBinaryButton");
         let showIndexesInBase10Button = document.getElementById("showIndexesInBase10Button");
-        let reciverCheck1Button = document.getElementById("reciverCheck1Button");
-        let reciverCheck2Button = document.getElementById("reciverCheck2Button");
-        let reciverCheck3Button = document.getElementById("reciverCheck3Button");
-        let reciverCheck4Button = document.getElementById("reciverCheck4Button");
         let multipleErrorCheckButton = document.getElementById("multipleErrorCheckButton")
 
         this.userInput.addEventListener("keyup", this.userInputEventHandler.bind(this));
@@ -66,41 +59,49 @@ export default class ClientHandler {
         showParityBitButton.addEventListener("click", this.toggleParityBitHandler.bind(this));
         showIndexesInBinaryButton.addEventListener("click", this.toggleBinaryIndexesHandler.bind(this))
         showIndexesInBase10Button.addEventListener("click", this.toggleBase10IndexesHandler.bind(this))
-        reciverCheck1Button.addEventListener("click", this.receiverCheck1Handler.bind(this))
-        reciverCheck2Button.addEventListener("click", this.receiverCheck2Handler.bind(this))
-        reciverCheck3Button.addEventListener("click", this.receiverCheck3Handler.bind(this))
-        reciverCheck4Button.addEventListener("click", this.receiverCheck4Handler.bind(this))
         multipleErrorCheckButton.addEventListener("click", this.reciverMultipleErrorCheck.bind(this))
 
     }
 
+    private setUpReceiverChecks() {
+        const receiverOptionsELe = document.getElementById("receiverOptions")
+        this.receiver = new HammingCodesReceiver(this.cellList);
+        let checksCount = this.receiver.getChecksCount();
+        for(let i = 0; i<checksCount; i++) {
+            let checkSpanEle = document.createElement("span");
+            checkSpanEle.classList.add("disabled");
+            checkSpanEle.innerText = `Receiver Check ${i}`
+            checkSpanEle.addEventListener("click", (e) => this.receiverCheckHandler(i,e));
+            receiverOptionsELe.appendChild(checkSpanEle);
+        }
+
+    }
 
     private userInputEventHandler() {
-        this.CellList.setData(this.userInput.value)
-        this.sizeEle.innerHTML = this.CellList.getSize().toString();
+        this.cellList.setData(this.userInput.value)
         this.render();
     }
 
     private addParityBitHandler(event:Event) {
-        this.sender.setCells(this.CellList)
+        this.sender.setCells(this.cellList)
 
         if(this.state.addParityBitButtonChecked) return;
 
         this.sender.addParityBits();
-        this.CellList = this.sender.getCells();
+        this.cellList = this.sender.getCells();
         this.state.addParityBitButtonChecked = true;
         this.toggleActiveState(event.target);
         this.render(event);
     }
 
     private toggleParityBitHandler(event:Event) {
-        this.sender.setCells(this.CellList)
+        this.sender.setCells(this.cellList)
 
         if(this.state.showParityBitButtonChecked) this.sender.removeParityBitStatus();
         else this.sender.setParityBitStatus();
 
         this.toggleActiveState(event.target);
-        this.CellList = this.sender.getCells();
+        this.cellList = this.sender.getCells();
         this.render(event);
     }
 
@@ -120,38 +121,18 @@ export default class ClientHandler {
         this.table.render(this.tableEle);
     }
 
-    private receiverCheck1Handler(event:Event) {
-        this.receiver = new HammingCodesReceiver(this.CellList);
-        this.receiver.check1();
-        this.CellList = this.receiver.getData();
-        this.render(event)
-    }
-    
-    private receiverCheck2Handler(event:Event) {
-        this.receiver = new HammingCodesReceiver(this.CellList);
-        this.receiver.check2();
-        this.CellList = this.receiver.getData();
+    private receiverCheckHandler(checkNumber:number, event:Event) {
+        this.receiver = new HammingCodesReceiver(this.cellList);
+        this.receiver.runTest(checkNumber);
+        this.cellList = this.receiver.getData();
         this.render(event)
     }
 
-    private receiverCheck3Handler(event:Event) {
-        this.receiver = new HammingCodesReceiver(this.CellList);
-        this.receiver.check3();
-        this.CellList = this.receiver.getData();
-        this.render(event)
-    }
-
-    private receiverCheck4Handler(event:Event) {
-        this.receiver = new HammingCodesReceiver(this.CellList);
-        this.receiver.check4();
-        this.CellList = this.receiver.getData();
-        this.render(event)
-    }
 
     private reciverMultipleErrorCheck(event:Event) {
-        this.receiver = new HammingCodesReceiver(this.CellList);
+        this.receiver = new HammingCodesReceiver(this.cellList);
         this.receiver.twoErrorCheck();
-        this.CellList = this.receiver.getData();
+        this.cellList = this.receiver.getData();
         this.render(event)
     }
 
@@ -168,7 +149,8 @@ export default class ClientHandler {
 
     private render(event?:Event) {
         if(event != null) this.toggleActiveState(event.target)
-        this.table = new Table(this.CellList);
+        this.table = new Table(this.cellList);
+        this.sizeEle.innerHTML = this.cellList.getSize().toString();
         this.table.render(this.tableEle);
     }
 }

@@ -9,42 +9,21 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     private head:Cell | null;
     private errorFound = false;
-
-    private data = {
-        firstTestColumns: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        }, 
-        secondTestColumns: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        },
-        thirdTestRows: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        },
-
-        forthTestRows: {
-            cells: new Array<Cell>(),
-            others: new Array<Cell>()
-        }
-    }
-
-
-    private data2 = {};
-
+    private cellList:CellList;
+    private data: {[key: number]:Cell[]} = {}
+    private others: {[key: number]:Cell[]} = {}
     
 
-    constructor(CellList:CellList) {
+    constructor(cellList:CellList) {
         super();
-        this.CellList = CellList;
-        this.head = CellList.getHead();
+        this.cellList = cellList;
+        this.head = cellList.getHead();
         this.prepRows();
     }
 
     
     public getData() {
-        return this.CellList;
+        return this.cellList;
      
     }
 
@@ -53,24 +32,10 @@ export default class HammingCodesReceiver extends HammingCodes {
     /**
      * Check1 checks if the odd colums are even or odd ( expected to be even)
      */
-    public check1() {
-        return this.test(this.data.firstTestColumns);
+    public runTest(testNumber:number) {
+        let testNumberAdjusted = this.cellList.getHead().getIndex().length - testNumber - 1;
+        return this.test(this.data[testNumberAdjusted], this.others[testNumberAdjusted]);
     }
-
-
-    public check2() {
-        return this.test(this.data.secondTestColumns);
-    }
-
-
-    public check3() {
-        return this.test(this.data.thirdTestRows);
-    }
-
-    public check4() {
-        return this.test(this.data.forthTestRows);
-    }
-
 
     public twoErrorCheck() {
         let countOfOnes = this.countTheOnesInNode(this.head);
@@ -86,9 +51,13 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     }
 
+    public getChecksCount() {
+        return Object.keys(this.data).length;
+        
+    }
 
-    private test(array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
-        const {cells, others} = array;
+
+    private test(cells: Cell[], others: Cell[]):boolean {
         let countOfOnes:number = this.countTheOnes(cells);
 
         // if the count is even 
@@ -115,30 +84,22 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     }
 
-
-    public prepRows() {
+    private prepRows() {
         let curr:Cell = this.head;
         while(curr!= null ) {
             let index = curr.getIndex();
-
-            // first check data
-            if(index[index.length-1] == 1) this.data.firstTestColumns.cells.push(curr)
-            else this.data.firstTestColumns.others.push(curr);
-
-            if(index[index.length-2] == 1) this.data.secondTestColumns.cells.push(curr);
-            else this.data.secondTestColumns.others.push(curr);
-
-            if(index[index.length-3] == 1) this.data.thirdTestRows.cells.push(curr);
-            else this.data.thirdTestRows.others.push(curr);
-
-            if(index[index.length-4] == 1) this.data.forthTestRows.cells.push(curr);
-            else this.data.forthTestRows.others.push(curr);
-
-            
+            for(let i = 0; i<index.length; i++) {
+                if(index[i] == 1) {
+                    if(this.data[i] == undefined) this.data[i] = [curr]
+                    else this.data[i].push(curr);
+                } else {
+                    if(this.data[i] == undefined) this.others[i] = [curr]
+                    else this.others[i].push(curr);
+                }
+            }
             
             curr = curr.next;
         }
-
     }
 
 
