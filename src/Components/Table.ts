@@ -5,7 +5,8 @@ import { STATUS } from "../Types/STATUS";
 export default class Table {
 
     private head:Cell;
- 
+    private showBinaryIndex = false;
+    private showBase10Index = false;
     constructor(CellList:CellList) {
          this.head = CellList.getHead();
     }
@@ -33,9 +34,9 @@ export default class Table {
                     tdEle.style.backgroundColor = "#808080";
                 }
                 else{
-                    // tdEle.innerText = curr.getData() + "\n" + curr.getIndex();
-                    tdEle.innerText = curr.getData().toString();
-                    // tdEle.style.backgroundColor = this.getBackgroundColor(curr.getStatus());
+                    tdEle.innerText = curr.getData().toString(); 
+                    if(this.showBinaryIndex) tdEle.innerText += "\n index: " + curr.getIndex();
+                    if(this.showBase10Index) tdEle.innerText += "\n index: " + curr.getBase10Index();
                     tdEle.classList.add(this.getStyleClass(curr.getStatus()))
                     curr = curr.next;
                 } 
@@ -73,5 +74,12 @@ export default class Table {
         return counter;
     }
 
+    public toggleShowBinaryIndex() {
+        this.showBinaryIndex = !this.showBinaryIndex;
+    }
+
+    public toggleShowBase10Index() {
+        this.showBase10Index = !this.showBase10Index;
+    }
  
  }

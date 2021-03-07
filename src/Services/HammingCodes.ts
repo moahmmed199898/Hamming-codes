@@ -3,9 +3,9 @@ import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 
 export default class HammingCodes {
-    CellList:CellList;
+    protected CellList:CellList;
 
-    getParityBits():Cell[] {
+    protected getParityBits():Cell[] {
         let curr = this.CellList.getHead();
         let parityBits:Cell[] = [];
         while(curr != null) {
@@ -22,7 +22,7 @@ export default class HammingCodes {
         return parityBits;
     }
 
-    findCountsOfOnes() {
+    protected findCountsOfOnes() {
         // considering the indexes are 8 in length we can loop though them and count how many ones per index ie 
         //0,0,0,0,0,0,1,0
         //0,0,0,0,0,1,1,0
@@ -47,7 +47,7 @@ export default class HammingCodes {
     }
 
         
-    convertStringBinaryDigitsToCells(data:string[]):Cell {
+    protected convertStringBinaryDigitsToCells(data:string[]):Cell {
         let firstDigit:BinaryDigit = Number.parseInt(data[0]) as BinaryDigit;
         let start = new Cell(firstDigit,0);
         let curr = start;

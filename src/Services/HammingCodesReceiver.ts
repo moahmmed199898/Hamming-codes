@@ -28,9 +28,10 @@ export default class HammingCodesReceiver extends HammingCodes {
             cells: new Array<Cell>(),
             others: new Array<Cell>()
         }
-
-
     }
+
+
+    private data2 = {};
 
     
 
@@ -41,15 +42,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         this.prepRows();
     }
 
-
-    public checkData() {
-        this.check1()
-        this.check2()
-        this.check3()
-        this.check4()
-        // this.twoErrorCheck()
-    }
-
+    
     public getData() {
         return this.CellList;
      
@@ -94,7 +87,7 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
 
-    private test (array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
+    private test(array: { cells: Array<Cell>; others: Array<Cell>; }):boolean {
         const {cells, others} = array;
         let countOfOnes:number = this.countTheOnes(cells);
 
@@ -128,7 +121,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         while(curr!= null ) {
             let index = curr.getIndex();
 
-            //first check data
+            // first check data
             if(index[index.length-1] == 1) this.data.firstTestColumns.cells.push(curr)
             else this.data.firstTestColumns.others.push(curr);
 
@@ -141,6 +134,7 @@ export default class HammingCodesReceiver extends HammingCodes {
             if(index[index.length-4] == 1) this.data.forthTestRows.cells.push(curr);
             else this.data.forthTestRows.others.push(curr);
 
+            
             
             curr = curr.next;
         }

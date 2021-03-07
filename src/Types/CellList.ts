@@ -102,6 +102,7 @@ export default class CellList {
 
 
     public setData(text:string) {
+        this.size = 0;
         let binaryData = this.getBinaryData(text);
         let cells = this.convertStringBinaryDigitsToCells(binaryData);
         this.head = cells;
@@ -122,11 +123,13 @@ export default class CellList {
     private convertStringBinaryDigitsToCells(data:string[]):Cell {
         let firstDigit:BinaryDigit = Number.parseInt(data[0]) as BinaryDigit;
         let start = new Cell(firstDigit,0);
+        this.size++;
         let curr = start;
         for(let i = 1; i<data.length;i++) {
             let digit = Number.parseInt(data[i]) as BinaryDigit;
             curr.next = new Cell(digit,i);
             curr = curr.next;
+            this.size++;
         }
 
         return start;

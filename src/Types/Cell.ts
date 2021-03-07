@@ -31,6 +31,9 @@ export default class Cell{
         }
         return results;
     }
+    public getBase10Index():number {
+        return Number.parseInt(this.getIndex().join(""),2)
+    }
     public setIndex(index:number){
         this.index = index.toString(2).split("").map(num=>parseInt(num) as BinaryDigit);   
     }
