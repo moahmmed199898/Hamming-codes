@@ -1,6 +1,7 @@
 import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
+import Theme from "./Theme";
 
 export default class Table {
 
@@ -37,7 +38,8 @@ export default class Table {
                     tdEle.innerText = curr.getData().toString(); 
                     if(this.showBinaryIndex) tdEle.innerText += "\n index: " + curr.getIndex();
                     if(this.showBase10Index) tdEle.innerText += "\n index: " + curr.getBase10Index();
-                    tdEle.classList.add(this.getStyleClass(curr.getStatus()))
+                    // tdEle.classList.add(this.getStyleClass(curr.getStatus()))
+                    Theme.setElementStatus(tdEle,curr.getStatus())
                     curr = curr.next;
                 } 
 
@@ -53,15 +55,7 @@ export default class Table {
 
 
     
-    private getStyleClass(status:STATUS):string {
-        switch(status) {
-            case STATUS.Fail: return "Fail";
-            case STATUS.Neutral: return "Neutral";
-            case STATUS.Pass: return "Pass"; 
-            case STATUS.MultipleErrors: return "MultipleErrors";
-            case STATUS.ParityBit: return "ParityBit";
-        }
-    }
+
 
 
     private countData(head:Cell | null) {

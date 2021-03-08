@@ -47,6 +47,8 @@ html, body {
   background-color: $headerColor;
   display: flex;
   padding: 20px;
+  transition: background-color 0.5s ease;
+
 
   #wordSender, #wordReciver {
     flex: 2;
@@ -84,6 +86,7 @@ html, body {
   color: $white;
   font-weight: bold;
   display: grid;
+  transition: background-color 0.5s ease;
   grid-template-areas: 
     "sender"
     "common"
@@ -127,12 +130,6 @@ html, body {
   grid-template-areas: "sender reciver";
   color: $white;
   font-weight: bold;
-
-  .Pass {background-color: $pass;}
-  .Fail{background-color: $fail;}
-  .Neutral{background-color: $Neutral;}
-  .MultipleErrors{background-color: $MultipleErrors;}
-  .ParityBit{background-color: $ParityBit;}
 
   #sender{
     grid-area: sender;
@@ -224,3 +221,9 @@ html, body {
     font-weight: bold;
   }
 }
+
+.Pass {background-color: $pass !important;}
+.Fail{background-color: $fail !important;}
+.Neutral{background-color: $Neutral !important;}
+.MultipleErrors{background-color: $MultipleErrors !important;}
+.ParityBit{background-color: $ParityBit !important;}

@@ -39,6 +39,44 @@ export default class CellList {
         this.size++;
     }
 
+
+    public removeCellByIndex(index:number) {
+        let before:Cell;
+        let after:Cell;
+        if(index-1 < 0) before = this.getHead();
+        else if(index+1>this.size-1) after = this.getLastCell();
+        else{
+            before = this.getCell(index-1);
+            after = this.getCell(index+1);
+            before.next = after;
+        }
+        this.size--;
+    }
+
+    public removeCell(cell:Cell) {
+        let curr = this.head;
+        let prev = curr;
+        while(curr != null) {
+            if(curr.equals(cell)) {
+                prev.next = curr.next;
+                break;
+            }
+
+            prev = curr;
+            curr = curr.next;
+        }
+    }
+
+    public toArray():Cell[] {
+        let cells: Cell[] = new Array<Cell>();
+        let curr = this.head;
+        while(curr != null) {
+            cells.push(curr);
+            curr = curr.next;
+        }
+        return cells;
+    }
+
     public getLastCell():Cell {
         return this.getCell(this.size-1);
     }

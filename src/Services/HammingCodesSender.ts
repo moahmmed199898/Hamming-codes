@@ -9,30 +9,37 @@ export default class HammingCodesSender extends HammingCodes {
         super();
         let binaryData:string[] = this.getBinaryData(data);
         let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
-        this.CellList = new CellList(cells);
+        this.cellList = new CellList(cells);
         // this.addParityBits();
         // this.CellList.reIndexCells();
         
     }
 
     public setCells(cells:CellList) {
-        this.CellList = cells;
+        this.cellList = cells;
     }
 
 
     public addParityBits() {
         let currentIndex = 1;
         
-        for(let exponent = 0; currentIndex < this.CellList.getSize(); exponent++) {
+        for(let exponent = 0; currentIndex < this.cellList.getSize(); exponent++) {
             let cell = new Cell(0);
-            this.CellList.addCellByIndex(cell, currentIndex-1);
+            this.cellList.addCellByIndex(cell, currentIndex-1);
             currentIndex = Math.pow(2,exponent);
         }
         
 
-        this.CellList.reIndexCells();
+        this.cellList.reIndexCells();
         this.setParityBits();
         
+    }
+
+    public removeParityBits() {
+        let parityBits = this.getParityBits();
+        for(let parityBit of parityBits) {
+            this.cellList.removeCell(parityBit);
+        }
     }
 
     public setParityBitStatus() {
@@ -66,7 +73,7 @@ export default class HammingCodesSender extends HammingCodes {
 
 
     public getCells():CellList {
-        return this.CellList;
+        return this.cellList;
     }
 
     private getBinaryData(data: string) {
@@ -82,7 +89,7 @@ export default class HammingCodesSender extends HammingCodes {
     }
 
     private setZeroIndexParity() {
-        let curr = this.CellList.getHead();
+        let curr = this.cellList.getHead();
         let countOfOnes = 0;
         while(curr != null) {
             if(curr.getData() == 1) countOfOnes++;
@@ -90,7 +97,7 @@ export default class HammingCodesSender extends HammingCodes {
         }
 
         if(countOfOnes % 2 != 0) {
-            this.CellList.getHead().setData(1)
+            this.cellList.getHead().setData(1)
         }
     }
 

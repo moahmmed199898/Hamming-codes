@@ -3,10 +3,10 @@ import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 
 export default class HammingCodes {
-    protected CellList:CellList;
+    protected cellList:CellList;
 
     protected getParityBits():Cell[] {
-        let curr = this.CellList.getHead();
+        let curr = this.cellList.getHead();
         let parityBits:Cell[] = [];
         while(curr != null) {
             let indexes = curr.getIndex();
@@ -28,7 +28,7 @@ export default class HammingCodes {
         //0,0,0,0,0,1,1,0
         //this will result in 2 in the 2nd index and 1 in the first index
         let counters:{[key:number]:number} = {}
-        let curr:Cell = this.CellList.getHead();
+        let curr:Cell = this.cellList.getHead();
         let numberIndex =0;
 
         while(curr != null ){

@@ -9,7 +9,6 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     private head:Cell | null;
     private errorFound = false;
-    private cellList:CellList;
     private data: {[key: number]:Cell[]} = {}
     private others: {[key: number]:Cell[]} = {}
     
@@ -27,14 +26,32 @@ export default class HammingCodesReceiver extends HammingCodes {
      
     }
 
+    public getDataAsString():string {
+        let parityBits = this.getParityBits();
+        let curr = this.cellList.getHead().next;
+        let bits = "";
+        let index = 0;
+        while(curr != null) {
+            if(parityBits.indexOf(curr) == -1) {
+                bits+= curr.getData();
+                if(index == 7) {
+                    bits += " "
+                    index = 0;
+                } else index++;
+            }
+            curr = curr.next;
+        }
 
+        let bins = bits.split(" ");
+        if(bins[bins.length-1] == "") bins= bins.slice(0,bins.length-1);
+        bits = bins.map(bin=>String.fromCharCode(parseInt(bin,2))).join("");
 
-    /**
-     * Check1 checks if the odd colums are even or odd ( expected to be even)
-     */
+        return bits
+    }
+
     public runTest(testNumber:number) {
         let testNumberAdjusted = this.cellList.getHead().getIndex().length - testNumber - 1;
-        return this.test(this.data[testNumberAdjusted], this.others[testNumberAdjusted]);
+        this.test(this.data[testNumberAdjusted], this.others[testNumberAdjusted]);
     }
 
     public twoErrorCheck() {
@@ -52,7 +69,7 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
     public getChecksCount() {
-        return Object.keys(this.data).length;
+        return Object.keys(this.data).length+1;
         
     }
 

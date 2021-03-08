@@ -1,12 +1,13 @@
-import Table from "./Components/Table";
+import Table from "./UI/Table";
 import HammingCodesReceiver from "./Services/HammingCodesReceiver";
 import HammingCodesSender from "./Services/HammingCodesSender";
-import { logData } from "./Services/Tools";
 import CellList from "./Types/CellList";
+import Theme from "./UI/Theme";
+import { STATUS } from "./Types/STATUS";
 
 export default class ClientHandler {
     private userInput:HTMLInputElement; 
-    private output:HTMLElement;
+    private output:HTMLInputElement;
     private tableEle:HTMLElement;
     private sizeEle:HTMLElement
 
@@ -34,7 +35,7 @@ export default class ClientHandler {
     
     private setupProperties() {
         this.userInput = <HTMLInputElement> document.getElementById("userInput");
-        this.output = document.getElementById("output");
+        this.output = <HTMLInputElement> document.getElementById("output");
         this.tableEle = document.querySelector("#tables #sender");
         this.sizeEle = document.getElementById("size");
 
@@ -65,6 +66,7 @@ export default class ClientHandler {
 
     private setUpReceiverChecks() {
         const receiverOptionsELe = document.getElementById("receiverOptions")
+        receiverOptionsELe.innerHTML = "";
         this.receiver = new HammingCodesReceiver(this.cellList);
         let checksCount = this.receiver.getChecksCount();
         for(let i = 0; i<checksCount; i++) {
@@ -74,23 +76,28 @@ export default class ClientHandler {
             checkSpanEle.addEventListener("click", (e) => this.receiverCheckHandler(i,e));
             receiverOptionsELe.appendChild(checkSpanEle);
         }
-
     }
 
     private userInputEventHandler() {
+        if(this.state.addParityBitButtonChecked) {
+            this.sender.removeParityBits();
+            this.state.addParityBitButtonChecked = false;
+        }
+
         this.cellList.setData(this.userInput.value)
+        this.setUpReceiverChecks();
         this.render();
     }
 
-    private addParityBitHandler(event:Event) {
-        this.sender.setCells(this.cellList)
-
+    private addParityBitHandler(event?:Event) {
         if(this.state.addParityBitButtonChecked) return;
 
+        this.sender.setCells(this.cellList)
         this.sender.addParityBits();
         this.cellList = this.sender.getCells();
         this.state.addParityBitButtonChecked = true;
-        this.toggleActiveState(event.target);
+        if(event == null) this.toggleActiveState(document.getElementById("addParityBitButton"))
+        else this.toggleActiveState(event.target);
         this.render(event);
     }
 
@@ -121,7 +128,8 @@ export default class ClientHandler {
         this.table.render(this.tableEle);
     }
 
-    private receiverCheckHandler(checkNumber:number, event:Event) {
+    private receiverCheckHandler(checkNumber:number, event?:Event) {
+        this.addParityBitHandler();
         this.receiver = new HammingCodesReceiver(this.cellList);
         this.receiver.runTest(checkNumber);
         this.cellList = this.receiver.getData();
@@ -149,8 +157,17 @@ export default class ClientHandler {
 
     private render(event?:Event) {
         if(event != null) this.toggleActiveState(event.target)
+        let cells = this.cellList.toArray();
+        let parityBits = cells.findIndex(cell=>cell.getStatus()==STATUS.ParityBit);
+        let fails = cells.findIndex(cell=>cell.getStatus()==STATUS.Fail);
+        if(parityBits>-1) Theme.setCurrentThemeStatus(STATUS.ParityBit);
+        else if(fails>-1) Theme.setCurrentThemeStatus(STATUS.Fail);
+
         this.table = new Table(this.cellList);
         this.sizeEle.innerHTML = this.cellList.getSize().toString();
+
+        this.output.value = this.receiver.getDataAsString();
+        
         this.table.render(this.tableEle);
     }
 }

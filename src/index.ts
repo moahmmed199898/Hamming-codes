@@ -1,4 +1,4 @@
-import Table from "./Components/Table";
+import Table from "./UI/Table";
 import HammingCodesReceiver from "./Services/HammingCodesReceiver"
 import HammingCodesSender from "./Services/HammingCodesSender";
 import { BinaryDigit } from "./Types/Binary";
