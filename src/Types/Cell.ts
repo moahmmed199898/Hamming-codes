@@ -41,10 +41,10 @@ export default class Cell{
     public equals(object:any):boolean {
         if(object == null) return false;
         if(!(object instanceof Cell)) return false;
-        object = <Cell> object;
-        if(!(this.data == object.data)) return false;
-        if(!(this.getBase10Index() == object.getBase10Index())) return false;
-        if(!(this.status == object.status)) return false;
+        object = object as Cell;
+        if(!(this.data === object.data)) return false;
+        if(!(this.getBase10Index() === object.getBase10Index())) return false;
+        if(!(this.status === object.status)) return false;
         return true;
     }
 

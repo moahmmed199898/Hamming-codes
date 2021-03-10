@@ -29,7 +29,6 @@ export default abstract class HammingCodes {
         //this will result in 2 in the 2nd index and 1 in the first index
         let counters:{[key:number]:number} = {}
         let curr:Cell = this.cellList.getHead();
-        let numberIndex =0;
 
         while(curr != null ){
             let index = curr.getIndex();
