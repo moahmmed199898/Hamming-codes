@@ -7,7 +7,7 @@ import HammingCodes from "./HammingCodes";
 
 export default class HammingCodesReceiver extends HammingCodes {
 
-    private head:Cell | null;
+    private head:Cell;
     private errorFound = false;
     private data: {[key: number]:Cell[]} = {}
     private others: {[key: number]:Cell[]} = {}
@@ -32,9 +32,9 @@ export default class HammingCodesReceiver extends HammingCodes {
         let bits = "";
         let index = 0;
         while(curr != null) {
-            if(parityBits.indexOf(curr) == -1) {
+            if(parityBits.indexOf(curr) === -1) {
                 bits+= curr.getData();
-                if(index == 7) {
+                if(index === 7) {
                     bits += " "
                     index = 0;
                 } else index++;

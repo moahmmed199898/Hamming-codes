@@ -14,7 +14,6 @@ export default class HammingCodesSender extends HammingCodes {
         // this.CellList.reIndexCells();
         
     }
-
     public setCells(cells:CellList) {
         this.cellList = cells;
     }
@@ -52,7 +51,7 @@ export default class HammingCodesSender extends HammingCodes {
     public removeParityBitStatus() {
         let parrityBits = this.getParityBits();
         for(let parrityBit of parrityBits) {
-            if(parrityBit.getStatus() == STATUS.ParityBit){
+            if(parrityBit.getStatus() === STATUS.ParityBit){
                 parrityBit.setStatus(STATUS.Neutral);
             }
         }
@@ -63,7 +62,7 @@ export default class HammingCodesSender extends HammingCodes {
         for(let parityBit of parityBits) {
             const parityGroupIndex = parityBit.getIndex().indexOf(1);
             const countsOfOnesPerGroup = this.findCountsOfOnes();
-            if(countsOfOnesPerGroup[parityGroupIndex] != undefined && countsOfOnesPerGroup[parityGroupIndex] % 2 != 0) {
+            if(countsOfOnesPerGroup[parityGroupIndex] !== undefined && countsOfOnesPerGroup[parityGroupIndex] % 2 !== 0) {
                 parityBit.setData(1);
             }
         }
@@ -91,12 +90,12 @@ export default class HammingCodesSender extends HammingCodes {
     private setZeroIndexParity() {
         let curr = this.cellList.getHead();
         let countOfOnes = 0;
-        while(curr != null) {
-            if(curr.getData() == 1) countOfOnes++;
+        while(curr !== null) {
+            if(curr.getData() === 1) countOfOnes++;
             curr = curr.next;
         }
 
-        if(countOfOnes % 2 != 0) {
+        if(countOfOnes % 2 !== 0) {
             this.cellList.getHead().setData(1)
         }
     }

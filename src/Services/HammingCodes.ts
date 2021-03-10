@@ -2,8 +2,8 @@ import { BinaryDigit } from "../Types/Binary";
 import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 
-export default class HammingCodes {
-    protected cellList:CellList;
+export default abstract class HammingCodes {
+    protected cellList:CellList = new CellList();
 
     protected getParityBits():Cell[] {
         let curr = this.cellList.getHead();
@@ -13,9 +13,9 @@ export default class HammingCodes {
             let highBitsCount = 0;
             for(let index of indexes) {
                 if(highBitsCount>1) break;
-                if(index == 1) highBitsCount++;
+                if(index === 1) highBitsCount++;
             }
-            if(highBitsCount == 1) parityBits.push(curr);
+            if(highBitsCount === 1) parityBits.push(curr);
             curr = curr.next;
         }
 
@@ -35,8 +35,8 @@ export default class HammingCodes {
             let index = curr.getIndex();
             let data = curr.getData();
             for(let i = 0; i<index.length; i++){
-                if(index[i] == 1 && data == 1) {
-                    if(counters[i] == null) counters[i] = 1;
+                if(index[i] === 1 && data === 1) {
+                    if(counters[i] === null) counters[i] = 1;
                     else counters[i]++;
                 }
             }

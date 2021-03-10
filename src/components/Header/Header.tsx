@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import './header.scss';
+import './_header.scss';
 
 export default class Header extends React.Component {
     render() {

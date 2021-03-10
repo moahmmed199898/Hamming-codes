@@ -1,15 +1,13 @@
-import { logData } from "../Services/Tools";
 import { BinaryDigit } from "./Binary";
 import Cell from "./Cell";
-import { STATUS } from "./STATUS";
 
 export default class CellList {
-    private head:Cell;
+    private head:Cell | null;
     private size:number;
     public constructor(cells?:Cell) {
         if(cells == null) this.head = null
         else this.head = cells;
-
+        
         this.size = this.countData(cells);
     }
 
@@ -172,6 +170,4 @@ export default class CellList {
 
         return start;
     }
-
-
 }
