@@ -1,17 +1,32 @@
 import React from "react";
-import HammingCodesSender from "../../Services/HammingCodesSender";
+import Cell from "../../Types/Cell";
 import CellList from "../../Types/CellList";
+import { receiverState } from "./../../State";
+import TableCell from "./TableCell";
 import "./_table.scss";
 type Props = {}
-type State = {}
+type State = {
+    table:Cell[][]
+}
 
 export default class Table extends React.Component<Props,State> {
     private cellList:CellList;
     private tableLimit: number;
+
     constructor(props:Props) {
         super(props);
-        let sender = new HammingCodesSender("H");
-        this.cellList = sender.getCells();
+
+        this.state = {
+            table: []
+        }
+
+
+        receiverState.subscribe(v=>{
+            this.cellList = v.getData();
+            this.setState({
+                table: this.getTable()
+            })
+        })
     }
 
 
@@ -40,9 +55,15 @@ export default class Table extends React.Component<Props,State> {
         <div className="tables">
             <table>
                 <tbody>
-                    {this.getTable().map((row,i)=>{
-                        return <tr key={i}>{row.map(cell=><td key={cell.getBase10Index()}>{cell.getData()}</td>)}</tr>
-                    })}
+                    {this.state.table.length === 0 ? <tr><td>N/A</td></tr>:
+                        this.state.table.map((row,i)=>{
+                            return <tr key={i}>
+                                {row.map(c=>
+                                     <TableCell status={c.getStatus()} data={c.getData()} base10Index={c.getBase10Index()} base2Index={c.getIndex()} /> 
+                                    )}
+                            </tr>
+                        })
+                    }
                 </tbody>
             </table>
         </div>

@@ -13,14 +13,16 @@ export default class HammingCodesReceiver extends HammingCodes {
     private others: {[key: number]:Cell[]} = {}
     
 
-    constructor(cellList:CellList) {
+    constructor(cellList?:CellList) {
         super();
+        if(cellList!==null) this.setData(cellList);
+    }
+
+    public setData(cellList:CellList) {
         this.cellList = cellList;
         this.head = cellList.getHead();
         this.prepRows();
     }
-
-    
     public getData() {
         return this.cellList;
      
@@ -43,7 +45,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         }
 
         let bins = bits.split(" ");
-        if(bins[bins.length-1] == "") bins= bins.slice(0,bins.length-1);
+        if(bins[bins.length-1] === "") bins= bins.slice(0,bins.length-1);
         bits = bins.map(bin=>String.fromCharCode(parseInt(bin,2))).join("");
 
         return bits
@@ -56,13 +58,13 @@ export default class HammingCodesReceiver extends HammingCodes {
 
     public twoErrorCheck() {
         let countOfOnes = this.countTheOnesInNode(this.head);
-        if(this.errorFound && countOfOnes%2 == 0) {
+        if(this.errorFound && countOfOnes%2 === 0) {
             let curr = this.head;
             while(curr!= null) {
                 curr.setStatus(STATUS.MultipleErrors);
                 curr = curr.next;
             }
-        } else if(!this.errorFound && countOfOnes%2 == 0) {
+        } else if(!this.errorFound && countOfOnes%2 === 0) {
             this.head.setStatus(STATUS.Pass)
         }
 
@@ -78,7 +80,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         let countOfOnes:number = this.countTheOnes(cells);
 
         // if the count is even 
-        if(countOfOnes%2 == 0) {
+        if(countOfOnes%2 === 0) {
             for(let cell of cells) cell.setStatus(STATUS.Pass);
             return true;
 
@@ -86,7 +88,7 @@ export default class HammingCodesReceiver extends HammingCodes {
             //if not 
             for(let cell of cells) 
             {
-                if(cell.getStatus() != STATUS.Pass) {
+                if(cell.getStatus() !== STATUS.Pass) {
                     cell.setStatus(STATUS.Fail);
                 }
             }
@@ -106,11 +108,11 @@ export default class HammingCodesReceiver extends HammingCodes {
         while(curr!= null ) {
             let index = curr.getIndex();
             for(let i = 0; i<index.length; i++) {
-                if(index[i] == 1) {
-                    if(this.data[i] == undefined) this.data[i] = [curr]
+                if(index[i] === 1) {
+                    if(this.data[i] === undefined) this.data[i] = [curr]
                     else this.data[i].push(curr);
                 } else {
-                    if(this.data[i] == undefined) this.others[i] = [curr]
+                    if(this.data[i] === undefined) this.others[i] = [curr]
                     else this.others[i].push(curr);
                 }
             }
@@ -124,7 +126,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         let countOfOnes = 0;
         //get the count of ones 
         for(let cell of cells){
-            if(cell.getData() == 1) countOfOnes++;
+            if(cell.getData() === 1) countOfOnes++;
         }
         return countOfOnes;
     }
@@ -134,7 +136,7 @@ export default class HammingCodesReceiver extends HammingCodes {
         let countOfOnes = 0;
         let curr = this.head;
         while(curr != null) {
-            if(curr.getData() == 1) countOfOnes++;
+            if(curr.getData() === 1) countOfOnes++;
             curr = curr.next;
         }
         return countOfOnes;

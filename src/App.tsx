@@ -1,7 +1,9 @@
 import React from 'react';
 import Header from './components/Header/Header';
 import Options from './components/Options/Options';
+import Stats from './components/Stats/Stats';
 import Table from './components/Table/Table';
+import TableKey from './components/TableKey/TableKey';
 
 export default class App extends React.Component {
   render() {
@@ -10,6 +12,8 @@ export default class App extends React.Component {
         <Header />
         <Options />
         <Table />
+        <TableKey />
+        <Stats />
       </div>
     );
   }

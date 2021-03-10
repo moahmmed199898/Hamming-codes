@@ -5,14 +5,9 @@ import HammingCodes from "./HammingCodes";
 
 export default class HammingCodesSender extends HammingCodes {
 
-    constructor(data: string) {
+    constructor(data?: string) {
         super();
-        let binaryData:string[] = this.getBinaryData(data);
-        let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
-        this.cellList = new CellList(cells);
-        // this.addParityBits();
-        // this.CellList.reIndexCells();
-        
+        if(data !== null) this.setData(data);
     }
     public setCells(cells:CellList) {
         this.cellList = cells;
@@ -98,6 +93,13 @@ export default class HammingCodesSender extends HammingCodes {
         if(countOfOnes % 2 !== 0) {
             this.cellList.getHead().setData(1)
         }
+    }
+
+
+    public setData(data:string) {
+        let binaryData:string[] = this.getBinaryData(data);
+        let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
+        this.cellList = new CellList(cells);
     }
 
     
