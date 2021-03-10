@@ -1,0 +1,36 @@
+@import "./../../variables";
+
+
+.header{
+    grid-area: header;
+    background-color: $headerColor;
+    display: flex;
+    padding: 20px;
+    transition: background-color 0.5s ease;
+  
+  
+    .wordSender, .wordReciver {
+      flex: 2;
+      height: 80%;
+    }
+  
+    input, input:disabled {
+      background-color: $white;
+      height: 100%;
+      border-radius: 20px;
+      border-style: none;
+      text-align: center;
+      font-weight: bold;
+      width: 100%;
+      font-size: 35px;
+    }
+  
+    
+  
+    .headerArrow{
+      color: $white;
+      flex: 1;
+      font-size: 4em;
+      text-align: center;
+    }
+  }

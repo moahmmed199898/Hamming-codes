@@ -1,0 +1,46 @@
+@import "./../../variables";
+
+.options{
+    grid-area: options;
+    background-color: darken( $headerColor, 10% );
+    color: $white;
+    font-weight: bold;
+    display: grid;
+    transition: background-color 0.5s ease;
+    grid-template-areas: 
+      "sender"
+      "common"
+      "reciver"
+    ;
+    span{
+      display: block;
+      margin: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  
+        
+    .active{
+      color: $white;
+    }
+  
+    .disabled{
+      color: $gray;
+    }
+  
+    .senderOptions {
+      grid-area: sender;
+    }
+  
+    .commonOptions{
+      grid-area: common;
+    }
+  
+    .reciverOptions{
+      grid-area: reciver;
+    }
+  
+  
+    
+  }
+  
