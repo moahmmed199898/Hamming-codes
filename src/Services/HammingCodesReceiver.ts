@@ -1,3 +1,4 @@
+import { options$, receiver$, sender$ } from "../State";
 import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
@@ -16,7 +17,35 @@ export default class HammingCodesReceiver extends HammingCodes {
     constructor(cellList?:CellList) {
         super();
         if(cellList!==null) this.setData(cellList);
+
+        /*if this doesn't make sense to you don't worry, you are not alone, this is one of these js things where you need an hour to research 
+          and still don't understand it but here is quick explanation:
+          JS is a single threaded language but it can do things like await and set timeouts without freezing the main thread. The way it does that is by putting things
+          that need to be awaited or setTimeout/setInterval on the side while it runs everything else and comes back to the setTimeout. So, by setting setTimeout of 0 
+          we are saying "hey do everything else and finish this last" 
+          
+          this is not the a good explanation but hey, I tried ¯\_(ツ)_/¯
+
+          Why am I doing this? I need the observables to be set and if I don't do it this way it will be... let's not talk about it ⊙﹏⊙ 
+
+        */
+        setTimeout(() => this.setupSubscriptions());
     }
+
+    protected setupSubscriptions() {
+
+            options$.subscribe(options=>{
+                options.receiverChecks.forEach(testNumber=>this.runTest(testNumber))
+                receiver$.next(this);
+            }) 
+
+
+            sender$.subscribe(sender=>{
+                this.setData(sender.getCells());
+                receiver$.next(this)
+            });
+    }
+
 
     public setData(cellList:CellList) {
         this.cellList = cellList;
@@ -25,7 +54,6 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
     public getData() {
         return this.cellList;
-     
     }
 
     public getDataAsString():string {

@@ -1,4 +1,5 @@
 import React from 'react';
+import "./State";
 import Header from './components/Header/Header';
 import Options from './components/Options/Options';
 import Stats from './components/Stats/Stats';

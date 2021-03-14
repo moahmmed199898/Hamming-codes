@@ -1,14 +1,50 @@
+import { input$, options$, sender$ } from "../State";
 import Cell from "../Types/Cell";
 import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
 
 export default class HammingCodesSender extends HammingCodes {
-
+    private parityBits:Array<Cell> = [];
     constructor(data?: string) {
         super();
         if(data !== null) this.setData(data);
+
+
+        /*if this doesn't make sense to you don't worry, you are not alone, this is one of these js things where you need an hour to research 
+          and still don't understand it but here is quick explanation:
+          JS is a single threaded language but it can do things like await and set timeouts without freezing the main thread. The way it does that is by putting things
+          that need to be awaited or setTimeout/setInterval on the side while it runs everything else and comes back to the setTimeout. So, by setting setTimeout of 0 
+          we are saying "hey do everything else and finish this last" 
+          
+          this is not the a good explanation but hey, I tried ¯\_(ツ)_/¯
+
+          Why am I doing this? I need the observables to be set and if I don't do it this way it will be... let's not talk about it ⊙﹏⊙ 
+
+        */
+        setTimeout(()=>this.setupSubscriptions());
     }
+
+
+    protected setupSubscriptions(): void {
+        input$.subscribe(input => {
+            this.setData(input)
+            sender$.next(this);
+        });
+
+        options$.subscribe(options=>{
+
+            if(options.addParityBits) {
+                this.addParityBits();
+            } else {
+                this.removeParityBits();
+            }
+
+            
+            sender$.next(this)
+        })
+    }
+
     public setCells(cells:CellList) {
         this.cellList = cells;
     }
@@ -21,17 +57,15 @@ export default class HammingCodesSender extends HammingCodes {
             let cell = new Cell(0);
             this.cellList.addCellByIndex(cell, currentIndex-1);
             currentIndex = Math.pow(2,exponent);
+            this.parityBits.push(cell);
         }
-        
-
         this.cellList.reIndexCells();
         this.setParityBits();
         
     }
 
     public removeParityBits() {
-        let parityBits = this.getParityBits();
-        for(let parityBit of parityBits) {
+        for(let parityBit of this.parityBits) {
             this.cellList.removeCell(parityBit);
         }
     }

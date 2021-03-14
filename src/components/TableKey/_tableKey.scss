@@ -4,8 +4,6 @@
     grid-area: tableKey;
     color: black;
     padding: 20px;
-    // margin-left: 30%;
-    // transform: translate(-20%,0);
     font-weight: bold;
     font-size: 20px;
     ul{
@@ -14,6 +12,7 @@
       li{
         padding-left: 50px;
         display: inline;
+        background-color: $white !important;
       }
       
   

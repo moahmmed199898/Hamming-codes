@@ -12,33 +12,47 @@
       "common"
       "reciver"
     ;
-    span{
+
+    label {
       display: block;
       margin: 20px;
-      height: 20px;
-      cursor: pointer;
+      position: relative;
+      width: 12em;
+      .switch{
+        margin-right: 10px;
+      }
+      span{
+        position: absolute;
+      }
     }
+
+    // span{
+    //   display: block;
+    //   margin: 20px;
+    //   height: 20px;
+    //   cursor: pointer;
+    // }
   
         
-    .active{
-      color: $white;
-    }
+    // .active{
+    //   color: $white;
+    // }
   
-    .disabled{
-      color: $gray;
-    }
+    // .disabled{
+    //   color: $gray;
+    // }
   
-    .senderOptions {
-      grid-area: sender;
-    }
+    // .senderOptions {
+    //   grid-area: sender;
+    // }
   
-    .commonOptions{
-      grid-area: common;
-    }
+    // .commonOptions{
+    //   grid-area: common;
+    // }
   
-    .reciverOptions{
-      grid-area: reciver;
-    }
+    // .reciverOptions{
+    //   grid-area: reciver;
+    // }
   
   
     

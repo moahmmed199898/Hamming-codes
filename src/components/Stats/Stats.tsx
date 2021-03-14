@@ -1,6 +1,6 @@
 import React from "react";
 import HammingCodesReceiver from "../../Services/HammingCodesReceiver";
-import {receiverState} from "./../../State";
+import {receiver$} from "./../../State";
 import "./_stats.scss";
 
 type Props = {}
@@ -14,7 +14,7 @@ export default class Stats extends React.Component<Props,State> {
         this.state = {
             size: 0
         }
-        receiverState.subscribe(this.receiverUpdatedHandler.bind(this))
+        receiver$.subscribe(this.receiverUpdatedHandler.bind(this))
     }
 
 

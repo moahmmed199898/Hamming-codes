@@ -5,6 +5,8 @@ import CellList from "../Types/CellList";
 export default abstract class HammingCodes {
     protected cellList:CellList = new CellList();
 
+    protected abstract setupSubscriptions():void;
+
     protected getParityBits():Cell[] {
         let curr = this.cellList.getHead();
         let parityBits:Cell[] = [];

@@ -57,6 +57,7 @@ export default class CellList {
         while(curr != null) {
             if(curr.equals(cell)) {
                 prev.next = curr.next;
+                this.size--;
                 break;
             }
 

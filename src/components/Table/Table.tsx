@@ -1,7 +1,7 @@
 import React from "react";
 import Cell from "../../Types/Cell";
 import CellList from "../../Types/CellList";
-import { receiverState } from "./../../State";
+import { receiver$ } from "./../../State";
 import TableCell from "./TableCell";
 import "./_table.scss";
 type Props = {}
@@ -21,7 +21,7 @@ export default class Table extends React.Component<Props,State> {
         }
 
 
-        receiverState.subscribe(v=>{
+        receiver$.subscribe(v=>{
             this.cellList = v.getData();
             this.setState({
                 table: this.getTable()
@@ -48,8 +48,7 @@ export default class Table extends React.Component<Props,State> {
         }
         return table;
     }
-
-
+    
     render() {
         return (
         <div className="tables">
@@ -59,7 +58,12 @@ export default class Table extends React.Component<Props,State> {
                         this.state.table.map((row,i)=>{
                             return <tr key={i}>
                                 {row.map(c=>
-                                     <TableCell status={c.getStatus()} data={c.getData()} base10Index={c.getBase10Index()} base2Index={c.getIndex()} /> 
+                                     <TableCell
+                                        key={c.getBase10Index()}
+                                        status={c.getStatus()}
+                                        data={c.getData()} 
+                                        base10Index={c.getBase10Index()} 
+                                        base2Index={c.getIndex()} /> 
                                     )}
                             </tr>
                         })
