@@ -1,6 +1,5 @@
 import { options$, receiver$, sender$ } from "../State";
 import Cell from "../Types/Cell";
-import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
 
@@ -8,13 +7,12 @@ import HammingCodes from "./HammingCodes";
 
 export default class HammingCodesReceiver extends HammingCodes {
 
-    private head:Cell;
     private errorFound = false;
     private data: {[key: number]:Cell[]} = {}
     private others: {[key: number]:Cell[]} = {}
     
 
-    constructor(cellList?:CellList) {
+    constructor(cellList?:Array<Cell>) {
         super();
         if(cellList!==null) this.setData(cellList);
 
@@ -47,9 +45,8 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
 
-    public setData(cellList:CellList) {
+    public setData(cellList:Array<Cell>) {
         this.cellList = cellList;
-        this.head = cellList.getHead();
         this.prepRows();
     }
     public getData() {
@@ -57,44 +54,41 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
     public getDataAsString():string {
-        let parityBits = this.getParityBits();
-        let curr = this.cellList.getHead().next;
         let bits = "";
-        let index = 0;
-        while(curr != null) {
-            if(parityBits.indexOf(curr) === -1) {
-                bits+= curr.getData();
-                if(index === 7) {
-                    bits += " "
-                    index = 0;
-                } else index++;
+        let bitCount = 0;
+        let parityBits = this.getParityBits();
+        // loop though the cell list
+        for(let i = 0; i<this.cellList.length; i++) {
+            //if there is a bit parity bit don't add it to the output
+            if(parityBits.findIndex(parityBit => parityBit.equals(this.cellList[i])) > -1) continue;
+            //get the data from the cell
+            bits += this.cellList[i].getData();
+            //check if there are 8 bits
+            bitCount++;
+            if(bitCount === 8) {
+                bits +=" "
+                bitCount = 0;
             }
-            curr = curr.next;
         }
 
+        //remove white space
+        bits.trim();
+        //split into 8 bit bins
         let bins = bits.split(" ");
+        //convert to Ascii 
         if(bins[bins.length-1] === "") bins= bins.slice(0,bins.length-1);
         bits = bins.map(bin=>String.fromCharCode(parseInt(bin,2))).join("");
 
-        return bits
+        return bits;
     }
 
     public runTest(testNumber:number) {
-        let testNumberAdjusted = this.cellList.getHead().getIndex().length - testNumber - 1;
+        let testNumberAdjusted = this.cellList[0].getIndex().length - testNumber - 1;
         this.test(this.data[testNumberAdjusted], this.others[testNumberAdjusted]);
     }
 
     public twoErrorCheck() {
-        let countOfOnes = this.countTheOnesInNode(this.head);
-        if(this.errorFound && countOfOnes%2 === 0) {
-            let curr = this.head;
-            while(curr!= null) {
-                curr.setStatus(STATUS.MultipleErrors);
-                curr = curr.next;
-            }
-        } else if(!this.errorFound && countOfOnes%2 === 0) {
-            this.head.setStatus(STATUS.Pass)
-        }
+        throw NotImplementedException();
 
     }
 
@@ -132,20 +126,19 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
     private prepRows() {
-        let curr:Cell = this.head;
-        while(curr!= null ) {
-            let index = curr.getIndex();
+        for(let cell of this.cellList) {
+            let index = cell.getIndex();
             for(let i = 0; i<index.length; i++) {
                 if(index[i] === 1) {
-                    if(this.data[i] === undefined) this.data[i] = [curr]
-                    else this.data[i].push(curr);
+                    if(this.data[i] === undefined) this.data[i] = [cell]
+                    else this.data[i].push(cell);
                 } else {
-                    if(this.data[i] === undefined) this.others[i] = [curr]
-                    else this.others[i].push(curr);
+                    if(this.data[i] === undefined) this.others[i] = [cell]
+                    else this.others[i].push(cell);
                 }
             }
             
-            curr = curr.next;
+            cell = cell.next;
         }
     }
 
@@ -160,13 +153,15 @@ export default class HammingCodesReceiver extends HammingCodes {
     }
 
     
-    private countTheOnesInNode(head:Cell):number {
+    private countTheOnesInNode(cells:Array<Cell>):number {
         let countOfOnes = 0;
-        let curr = this.head;
-        while(curr != null) {
-            if(curr.getData() === 1) countOfOnes++;
-            curr = curr.next;
+        for(let cell of cells) {
+            if(cell.getData() === 1) countOfOnes++;
         }
         return countOfOnes;
     }
+}
+
+function NotImplementedException() {
+    throw new Error("Function not implemented.");
 }

@@ -16,9 +16,9 @@ export default class Header extends React.Component<Props,State> {
         super(props);
         this.state = {
             currentValue: input$.getValue(),
-            outputValue: ""
+            outputValue: receiver$.getValue().getDataAsString()
         }
-
+        this.setUpSubscriptions();
 
 
     }

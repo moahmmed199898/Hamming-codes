@@ -3,7 +3,6 @@ import { BehaviorSubject } from "rxjs";
 import HammingCodesReceiver from "./Services/HammingCodesReceiver";
 import HammingCodesSender from "./Services/HammingCodesSender";
 
-
 const _sender = new HammingCodesSender("Hello");
 const _receiver = new HammingCodesReceiver(_sender.getCells());
 
@@ -12,15 +11,13 @@ export const sender$ = new BehaviorSubject(_sender);
 export const receiver$ = new BehaviorSubject(_receiver);
 
 export const options$ = new BehaviorSubject({
-    addParityBits: true,
-    showParityBits: true,
+    addParityBits: false,
+    showParityBits: false,
     showIndexesInBinary: false,
     showIndexesInBase10: false,
     multipleErrorCheck: false,
     receiverChecks: new Set<number>()
 } as OptionsState)
-
-
 
   
 // input$.subscribe((v)=>{

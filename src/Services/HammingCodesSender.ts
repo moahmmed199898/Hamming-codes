@@ -1,15 +1,14 @@
 import { input$, options$, sender$ } from "../State";
 import Cell from "../Types/Cell";
-import CellList from "../Types/CellList";
 import { STATUS } from "../Types/STATUS";
 import HammingCodes from "./HammingCodes";
 
 export default class HammingCodesSender extends HammingCodes {
-    private parityBits:Array<Cell> = [];
+    private parityBitsSet:boolean;
     constructor(data?: string) {
         super();
         if(data !== null) this.setData(data);
-
+        this.parityBitsSet = false;
 
         /*if this doesn't make sense to you don't worry, you are not alone, this is one of these js things where you need an hour to research 
           and still don't understand it but here is quick explanation:
@@ -27,50 +26,65 @@ export default class HammingCodesSender extends HammingCodes {
 
 
     protected setupSubscriptions(): void {
+
         input$.subscribe(input => {
+            let options = options$.getValue();
+            options.addParityBits = false;
+            options.showParityBits = false;
+            options$.next(options);
+
             this.setData(input)
             sender$.next(this);
         });
 
         options$.subscribe(options=>{
+            if(options.addParityBits) this.addParityBits();
+            else this.removeParityBits();
 
-            if(options.addParityBits) {
-                this.addParityBits();
-            } else {
-                this.removeParityBits();
-            }
+            if(options.showParityBits) this.setParityBitStatus();
+            else this.removeParityBitStatus();
 
-            
             sender$.next(this)
         })
     }
 
-    public setCells(cells:CellList) {
+    public setCells(cells:Array<Cell>) {
         this.cellList = cells;
     }
 
 
     public addParityBits() {
-        let currentIndex = 1;
-        
-        for(let exponent = 0; currentIndex < this.cellList.getSize(); exponent++) {
+        if(this.parityBitsSet) return;
+        let length = this.cellList.length
+        for(let i = 0; i<length; i++) {
             let cell = new Cell(0);
-            this.cellList.addCellByIndex(cell, currentIndex-1);
-            currentIndex = Math.pow(2,exponent);
-            this.parityBits.push(cell);
+            let index = Math.pow(2,i);
+            if(index > length) break;
+            this.cellList.splice(index,0, cell);
         }
-        this.cellList.reIndexCells();
+        this.parityBitsSet = true;
+        this.reIndexCells();
         this.setParityBits();
         
     }
 
     public removeParityBits() {
-        for(let parityBit of this.parityBits) {
-            this.cellList.removeCell(parityBit);
+        if(!this.parityBitsSet) return;
+        for(let parityBit of this.getParityBits()) {
+            let index = this.cellList.findIndex(cell=>cell.getBase10Index() === parityBit.getBase10Index());
+            this.cellList.splice(index,1)
         }
+        
+        this.parityBitsSet = false;
     }
 
     public setParityBitStatus() {
+        if(!this.parityBitsSet) {
+            let options = options$.getValue();
+            options.addParityBits = true;
+            options$.next(options)
+        }
+
         let parrityBits = this.getParityBits();
         for(let parrityBit of parrityBits) {
             parrityBit.setStatus(STATUS.ParityBit);
@@ -100,7 +114,7 @@ export default class HammingCodesSender extends HammingCodes {
     }
 
 
-    public getCells():CellList {
+    public getCells():Array<Cell> {
         return this.cellList;
     }
 
@@ -117,25 +131,28 @@ export default class HammingCodesSender extends HammingCodes {
     }
 
     private setZeroIndexParity() {
-        let curr = this.cellList.getHead();
-        let countOfOnes = 0;
-        while(curr !== null) {
-            if(curr.getData() === 1) countOfOnes++;
-            curr = curr.next;
-        }
-
-        if(countOfOnes % 2 !== 0) {
-            this.cellList.getHead().setData(1)
-        }
+        throw NotImplementedException();
     }
 
 
     public setData(data:string) {
         let binaryData:string[] = this.getBinaryData(data);
-        let cells:Cell = this.convertStringBinaryDigitsToCells(binaryData);
-        this.cellList = new CellList(cells);
+        let cells:Cell[] = this.convertStringBinaryDigitsToCells(binaryData);
+        this.cellList = cells;
+        this.reIndexCells();
     }
 
     
+    public reIndexCells():void {
+        let index = 0;
+        for(let cell of this.cellList) {
+            cell.setIndex(index);
+            index++;
+        }
+    }
 
+}
+
+function NotImplementedException() {
+    throw new Error("Function not implemented.");
 }

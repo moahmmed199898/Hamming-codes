@@ -1,6 +1,5 @@
 import React from "react";
 import Cell from "../../Types/Cell";
-import CellList from "../../Types/CellList";
 import { receiver$ } from "./../../State";
 import TableCell from "./TableCell";
 import "./_table.scss";
@@ -10,14 +9,14 @@ type State = {
 }
 
 export default class Table extends React.Component<Props,State> {
-    private cellList:CellList;
+    private cellList:Array<Cell>;
     private tableLimit: number;
 
     constructor(props:Props) {
         super(props);
-
+        this.cellList = receiver$.getValue().getData();
         this.state = {
-            table: []
+            table: this.getTable()
         }
 
 
@@ -31,15 +30,13 @@ export default class Table extends React.Component<Props,State> {
 
 
     private getTable() {
-        this.tableLimit = Math.ceil(Math.sqrt(this.cellList.getSize()));
-        let curr = this.cellList.getHead();
+        this.tableLimit = Math.ceil(Math.sqrt(this.cellList.length));
         let counter = 0;
         let table = [];
         let row = [];
-        while(curr!=null) {
-            row.push(curr);
+        for(let data of this.cellList) {
+            row.push(data);
             counter++;
-            curr = curr.next;
             if(counter > this.tableLimit) {
                 table.push(row);
                 row = [];

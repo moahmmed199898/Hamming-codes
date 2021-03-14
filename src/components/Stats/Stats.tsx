@@ -20,7 +20,7 @@ export default class Stats extends React.Component<Props,State> {
 
     receiverUpdatedHandler(v:HammingCodesReceiver) {
         this.setState({
-            size: v.getData().getSize()
+            size: v.getData().length
         })
     }
 
